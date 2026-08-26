@@ -6,15 +6,16 @@ This document standardizes the visual aesthetic and typography hierarchy for the
 
 ## 🎨 1. Visual Aesthetics & Design Language
 
-- **Overall Feel**: Modern, clean, friendly product/UI with light neutral backgrounds, rounded containers, and soft drop shadows.
-- **Card Aesthetics**: Soft pastel containers (`rounded-2xl` / `20px-24px` radius) with high-contrast text and vibrant accent highlights.
-- **Primary Accent**: Energetic Blue (`#3b82f6` / `#2563eb`).
-- **Pastel Palette**:
-  - Soft Blue: `#eef2ff`
-  - Soft Emerald Green: `#ecfdf5`
-  - Soft Warm Amber: `#fffbeb`
-  - Soft Rose: `#fff1f2`
-  - Soft Lavender: `#f5f3ff`
+- **Overall Feel**: Modern, clean, warm product UI with warm cream canvas (`#f8f7f4`), crisp white rounded containers, and soft ambient drop shadows.
+- **Card Aesthetics**: Pure white & soft pastel containers (`rounded-2xl` / `rounded-3xl`) with high-contrast text and warm pastel accents.
+- **Primary Contrast Accent**: Deep Slate / Charcoal (`#0f172a` / `#1e293b`).
+- **Multi-Pastel Palette (No Blue)**:
+  - Main Canvas BG: `#f8f7f4` (Warm Ivory Cream)
+  - Soft Pastel Sage / Mint: `#dcfce7`
+  - Soft Pastel Peach: `#ffe4e6`
+  - Soft Warm Amber: `#fef3c7`
+  - Soft Pastel Lavender: `#f3e8ff`
+  - Soft Pastel Coral/Rose: `#ffe4e6`
 - **Component Styling**:
   - Pill buttons (`rounded-full`)
   - Elevated cards (`shadow-sm`, `shadow-md` with soft ambient blur)

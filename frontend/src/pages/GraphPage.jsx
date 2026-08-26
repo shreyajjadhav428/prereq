@@ -624,26 +624,22 @@ export default function GraphPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f1f5f9] text-slate-800 font-['Inter'] pb-24">
+    <div className="min-h-screen bg-transparent text-slate-800 font-['Inter'] pb-24">
       
       {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform">
-              ⚡
-            </div>
-            <div>
-              <span className="font-bold text-lg text-slate-900 tracking-tight block leading-none">Prereq</span>
-              <span className="text-[11px] font-semibold text-indigo-600">JEE Physics Dependency Graph</span>
-            </div>
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+        <div className="flex items-center">
+          <Link to="/" className="group flex items-center">
+            <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
+              Prereq
+            </span>
           </Link>
         </div>
 
         <div className="flex items-center gap-3">
           <Link
             to="/profile"
-            className="text-xs font-semibold text-slate-600 hover:text-indigo-600 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all"
+            className="text-sm font-extrabold text-slate-700 hover:text-slate-900 px-5 py-2.5 rounded-2xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 shadow-xs hover:shadow-md transition-all flex items-center gap-2"
           >
             ⚙️ Profile & Schedule
           </Link>
@@ -654,7 +650,7 @@ export default function GraphPage() {
       <main className="max-w-[1650px] mx-auto px-2 sm:px-4 pt-6">
         
         {/* Main Poster Container matching the Image */}
-        <div className="bg-white rounded-3xl p-4 sm:p-8 shadow-2xl shadow-slate-300/60 border border-slate-200 overflow-x-auto text-center relative">
+        <div className="bg-[#fef7d8]/65 rounded-3xl p-4 sm:p-8 shadow-2xl shadow-amber-950/10 border-2 border-amber-300/70 overflow-x-auto text-center relative">
           
           {/* Poster Main Banner Title */}
           <div className="mb-6 space-y-3 min-w-[1550px]">
@@ -663,7 +659,7 @@ export default function GraphPage() {
             </h1>
 
             {/* Category Color Legend (Matching Top Legend in Image) */}
-            <div className="flex items-center justify-center gap-3 flex-wrap pt-1 pb-4 border-b border-slate-200">
+            <div className="flex items-center justify-center gap-3 flex-wrap pt-1 pb-4 border-b-2 border-amber-300/70">
               {CATEGORIES_LEGEND.map((cat) => (
                 <div
                   key={cat.label}
@@ -676,7 +672,7 @@ export default function GraphPage() {
           </div>
 
           {/* CANVAS GRAPH AREA (Spacious 1550x1500 layout) */}
-          <div className="relative min-w-[1550px] h-[1500px] mx-auto bg-[#fafafa] rounded-2xl border border-slate-200/80 p-2 overflow-hidden shadow-inner">
+          <div className="relative min-w-[1550px] h-[1500px] mx-auto bg-[#dcfce7]/70 rounded-2xl border-2 border-emerald-300/70 p-2 overflow-hidden shadow-inner">
             
             {/* SVG ARROW OVERLAY */}
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
@@ -812,12 +808,12 @@ export default function GraphPage() {
             </div>
 
             {/* Bottom Left Note Box (Matching Image "How to Read") */}
-            <div className="absolute bottom-5 left-5 z-20 w-72 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-300 shadow-lg text-left text-xs space-y-1.5">
+            <div className="absolute bottom-5 left-5 z-20 w-72 bg-[#f3e8ff] p-4 rounded-2xl border-2 border-purple-300/80 shadow-xl text-left text-xs space-y-1.5">
               <span className="font-bold text-slate-900 block text-sm">How to Read</span>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-purple-950 font-semibold leading-relaxed">
                 Arrow from A to B means A is required before studying B.
               </p>
-              <div className="flex items-center gap-2 pt-1 font-bold text-xs text-indigo-600">
+              <div className="flex items-center gap-2 pt-1 font-bold text-xs text-purple-900">
                 <span>A</span>
                 <span>➔</span>
                 <span>B</span>

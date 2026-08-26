@@ -200,7 +200,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-['Inter'] pb-16">
+    <div className="min-h-screen bg-transparent text-slate-800 font-['Inter'] pb-16">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-5 right-5 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-800 animate-bounce max-w-md">
@@ -210,30 +210,21 @@ export default function ProfilePage() {
       )}
 
       {/* Top Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
-        <div className="flex items-center gap-3">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
-              P
-            </div>
-            <div>
-              <span className="font-bold text-lg text-slate-900 tracking-tight block leading-none">Prereq</span>
-              <span className="text-[11px] font-semibold text-emerald-600">Student Profile Setup</span>
-            </div>
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+        <div className="flex items-center">
+          <Link to="/" className="group flex items-center">
+            <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
+              Prereq
+            </span>
           </Link>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 text-xs font-semibold">
-            <span className={`w-2 h-2 rounded-full ${isSaved ? 'bg-emerald-500 animate-pulse' : 'bg-amber-400'}`}></span>
-            <span>Status: {isSaved ? 'Profile Active ⚡' : 'Setup In Progress'}</span>
-          </div>
-
           <Link
             to="/login"
-            className="text-xs font-semibold text-slate-600 hover:text-emerald-600 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all"
+            className="text-sm font-extrabold text-slate-700 hover:text-rose-600 px-5 py-2.5 rounded-2xl border-2 border-slate-200 hover:border-rose-300 hover:bg-rose-50/80 shadow-xs hover:shadow-md transition-all flex items-center gap-2"
           >
-            Switch Account
+            Logout
           </Link>
         </div>
       </header>
@@ -243,11 +234,6 @@ export default function ProfilePage() {
         
         {/* Hero Title Header */}
         <div className="mb-8 text-left">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-bold mb-3 border border-emerald-200">
-            <span>⚙️ Profile Settings</span>
-            <span className="text-emerald-600">•</span>
-            <span>Coaching Schedule & Check-in</span>
-          </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             Set Up Your Student Profile
           </h1>
@@ -260,22 +246,22 @@ export default function ProfilePage() {
         <form onSubmit={handleSaveProfile} className="space-y-8">
           
           {/* SECTION 1: PERSONAL CONTACT DETAILS */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-left space-y-6">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+          <div className="bg-[#fef7d8] rounded-3xl p-6 sm:p-8 shadow-xl shadow-amber-900/10 border-2 border-amber-300/80 text-left space-y-6">
+            <div className="flex items-center gap-3 border-b-2 border-amber-200/80 pb-4">
+              <div className="w-10 h-10 rounded-2xl bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-lg shadow-xs">
                 👤
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900">1. Personal Contact Details</h2>
-                <p className="text-xs text-slate-500">Your full name, email, and phone contact for automated alerts</p>
+                <h2 className="text-lg sm:text-xl font-extrabold text-amber-950">Personal Contact Details</h2>
+                <p className="text-xs font-semibold text-amber-800/80">Your full name, email, and phone contact for automated alerts</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Full Name */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                  Full Name <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-amber-950">
+                  Full Name <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -283,14 +269,14 @@ export default function ProfilePage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="e.g. Alex Morgan"
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
 
               {/* Email Address */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                  Email Address <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-amber-950">
+                  Email Address <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="email"
@@ -298,14 +284,14 @@ export default function ProfilePage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="alex.morgan@example.com"
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
 
               {/* Phone Number */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                  Phone Number <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-amber-950">
+                  Phone Number <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="tel"
@@ -313,14 +299,14 @@ export default function ProfilePage() {
                   value={phone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50/50 text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
 
               {/* WhatsApp Number Section */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                  WhatsApp Number <span className="text-rose-500">*</span>
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-amber-950">
+                  WhatsApp Number <span className="text-rose-600">*</span>
                 </label>
 
                 {/* Checkbox: Same as Phone Number */}
@@ -330,9 +316,9 @@ export default function ProfilePage() {
                     id="sameAsPhoneToggle"
                     checked={sameAsPhone}
                     onChange={(e) => handleSameAsPhoneToggle(e.target.checked)}
-                    className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 rounded border-slate-300 cursor-pointer accent-emerald-600"
+                    className="h-4 w-4 text-slate-900 focus:ring-amber-500 rounded border-amber-400 cursor-pointer accent-slate-900"
                   />
-                  <label htmlFor="sameAsPhoneToggle" className="text-xs font-semibold text-slate-700 cursor-pointer">
+                  <label htmlFor="sameAsPhoneToggle" className="text-xs font-bold text-amber-950 cursor-pointer">
                     Same as Phone Number
                   </label>
                 </div>
@@ -344,12 +330,12 @@ export default function ProfilePage() {
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     placeholder="Enter WhatsApp Number"
-                    className="w-full px-4 py-3 rounded-2xl border border-emerald-300 bg-emerald-50/30 text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all animate-fadeIn"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all animate-fadeIn shadow-xs"
                   />
                 )}
                 {sameAsPhone && (
-                  <p className="text-[11px] text-slate-400">
-                    WhatsApp check-ins sent to: <span className="font-semibold text-slate-700">{phone}</span>
+                  <p className="text-[11px] text-amber-800 font-medium">
+                    WhatsApp check-ins sent to: <span className="font-bold text-amber-950">{phone}</span>
                   </p>
                 )}
               </div>
@@ -358,34 +344,27 @@ export default function ProfilePage() {
 
 
           {/* SECTION 2: COACHING SCHEDULE PROVIDER */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-left space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="bg-[#dcfce7] rounded-3xl p-6 sm:p-8 shadow-xl shadow-emerald-900/10 border-2 border-emerald-300/80 text-left space-y-6">
+            <div className="flex items-center justify-between border-b-2 border-emerald-200/80 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-lg">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-200 text-emerald-900 flex items-center justify-center font-bold text-lg shadow-xs">
                   📅
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-slate-900">2. Coaching Schedule</h2>
-                  <p className="text-xs text-slate-500">Only 1 active schedule supported at a time (Replace anytime)</p>
+                  <h2 className="text-lg sm:text-xl font-extrabold text-emerald-950">Coaching Schedule</h2>
+                  <p className="text-xs font-semibold text-emerald-800/80">Only 1 active schedule supported at a time (Replace anytime)</p>
                 </div>
               </div>
-
-              {hasActiveSchedule && !isReplacingSchedule && (
-                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  1 Active Schedule
-                </span>
-              )}
             </div>
 
             {/* REQUIREMENT #7: ACTIVE SCHEDULE SUMMARY & REPLACEMENT FLOW */}
             {hasActiveSchedule && !isReplacingSchedule ? (
-              <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+              <div className="p-5 rounded-2xl bg-white border-2 border-emerald-300 space-y-4 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-200 pb-3">
                   <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Current Active Schedule</span>
-                    <h3 className="text-sm font-bold text-slate-900">{activeScheduleName}</h3>
-                    <p className="text-xs text-slate-500">{physicsDeadlines.length} Physics chapters active in nightly check-in tracker</p>
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-900">Current Active Schedule</span>
+                    <h3 className="text-sm font-extrabold text-slate-900">{activeScheduleName}</h3>
+                    <p className="text-xs font-semibold text-slate-600">{physicsDeadlines.length} Physics chapters active in nightly check-in tracker</p>
                   </div>
                   <button
                     type="button"
@@ -397,10 +376,11 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Quick Chapter Summary Pills */}
-                <div className="flex flex-wrap gap-2 text-xs">
+                <div className="flex flex-wrap gap-2.5 text-sm pt-1">
                   {physicsDeadlines.map((ch) => (
-                    <span key={ch.id} className="px-3 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold shadow-2xs">
-                      {ch.chapter} (<span className="text-emerald-700 font-bold">{ch.deadline}</span>)
+                    <span key={ch.id} className="px-4 py-2 rounded-2xl bg-emerald-100/90 border-2 border-emerald-400 text-emerald-950 font-extrabold text-sm shadow-xs flex items-center gap-1.5">
+                      <span>{ch.chapter}</span>
+                      <span className="text-emerald-800 font-black">({ch.deadline})</span>
                     </span>
                   ))}
                 </div>
@@ -409,7 +389,7 @@ export default function ProfilePage() {
               /* SCHEDULE UPLOAD / MANUAL CREATION FLOW */
               <div className="space-y-6 animate-fadeIn">
                 {isReplacingSchedule && (
-                  <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between text-xs text-amber-900 font-medium">
+                  <div className="p-3.5 rounded-2xl bg-amber-100 border-2 border-amber-300 flex items-center justify-between text-xs text-amber-950 font-bold">
                     <div className="flex items-center gap-2">
                       <span>⚠️</span>
                       <span>Creating or uploading a new schedule will replace your currently active schedule.</span>
@@ -417,7 +397,7 @@ export default function ProfilePage() {
                     <button
                       type="button"
                       onClick={() => setIsReplacingSchedule(false)}
-                      className="text-slate-600 hover:text-slate-900 underline font-semibold text-[11px]"
+                      className="text-slate-800 hover:text-slate-950 underline font-extrabold text-[11px]"
                     >
                       Cancel Replacement
                     </button>
@@ -425,18 +405,18 @@ export default function ProfilePage() {
                 )}
 
                 {/* Mode Selector Tabs (Option 1 vs Option 2) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-1.5 rounded-2xl bg-slate-100/70 border border-slate-200/60">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-1.5 rounded-2xl bg-emerald-200/80 border-2 border-emerald-300">
                   <button
                     type="button"
                     onClick={() => setScheduleOption('upload')}
                     className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       scheduleOption === 'upload'
-                        ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-white text-slate-900 shadow-md border-2 border-emerald-400'
+                        : 'text-emerald-950 hover:text-slate-900 font-bold'
                     }`}
                   >
                     <span>📂 Option 1: Upload Schedule</span>
-                    <span className="text-[10px] bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md font-semibold">Excel / CSV / PDF</span>
+                    <span className="text-[10px] bg-amber-200 text-amber-950 px-2 py-0.5 rounded-md font-extrabold">Excel / CSV / PDF</span>
                   </button>
 
                   <button
@@ -444,27 +424,27 @@ export default function ProfilePage() {
                     onClick={() => setScheduleOption('manual')}
                     className={`py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                       scheduleOption === 'manual'
-                        ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-white text-slate-900 shadow-md border-2 border-emerald-400'
+                        : 'text-emerald-950 hover:text-slate-900 font-bold'
                     }`}
                   >
                     <span>✍️ Option 2: Enter Manually</span>
-                    <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md font-semibold">Chapter by Chapter</span>
+                    <span className="text-[10px] bg-emerald-200 text-emerald-950 px-2 py-0.5 rounded-md font-extrabold">Chapter by Chapter</span>
                   </button>
                 </div>
 
                 {/* OPTION 1: UPLOAD SCHEDULE WORKFLOW */}
                 {scheduleOption === 'upload' && (
                   <div className="space-y-6 animate-fadeIn">
-                    <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-100 space-y-1">
-                      <h3 className="text-xs font-bold text-indigo-900">Upload Coaching Timetable or Excel Map</h3>
-                      <p className="text-xs text-indigo-700">
+                    <div className="p-4 rounded-2xl bg-white border-2 border-emerald-300 space-y-1">
+                      <h3 className="text-xs font-extrabold text-emerald-950">Upload Coaching Timetable or Excel Map</h3>
+                      <p className="text-xs font-medium text-emerald-900">
                         Upload your institute's PDF, Excel, or CSV schedule. <strong>Note:</strong> Extracted deadlines will be displayed below for your mandatory review before applying!
                       </p>
                     </div>
 
                     {/* Drag and Drop Uploader */}
-                    <div className="relative border-2 border-dashed border-slate-200 hover:border-emerald-500 rounded-2xl p-6 text-center transition-all bg-slate-50/40 hover:bg-emerald-50/30 group">
+                    <div className="relative border-2 border-dashed border-emerald-400 hover:border-emerald-600 rounded-2xl p-6 text-center transition-all bg-white hover:bg-emerald-50 group shadow-xs">
                       <input
                         type="file"
                         accept=".pdf,.xlsx,.xls,.csv"
@@ -472,19 +452,19 @@ export default function ProfilePage() {
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       />
                       <div className="flex flex-col items-center justify-center space-y-2">
-                        <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-200 text-emerald-900 flex items-center justify-center text-xl font-bold group-hover:scale-110 transition-transform">
                           📄
                         </div>
-                        <p className="text-sm font-bold text-slate-800">
-                          Click to upload schedule file <span className="text-slate-400 font-normal">or drag & drop</span>
+                        <p className="text-sm font-bold text-slate-900">
+                          Click to upload schedule file <span className="text-slate-500 font-normal">or drag & drop</span>
                         </p>
-                        <p className="text-xs text-slate-400">Supports Excel (.xlsx, .csv) and PDF files up to 10MB</p>
+                        <p className="text-xs font-semibold text-slate-500">Supports Excel (.xlsx, .csv) and PDF files up to 10MB</p>
                       </div>
                     </div>
 
                     {uploadStatus === 'parsing' && (
-                      <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center gap-3 text-xs font-semibold text-emerald-800">
-                        <svg className="animate-spin h-5 w-5 text-emerald-600" fill="none" viewBox="0 0 24 24">
+                      <div className="p-4 rounded-2xl bg-amber-100 border-2 border-amber-300 flex items-center justify-center gap-3 text-xs font-bold text-amber-950">
+                        <svg className="animate-spin h-5 w-5 text-amber-700" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -495,43 +475,43 @@ export default function ProfilePage() {
                     {/* MANDATORY REVIEW OF EXTRACTED SCHEDULE (Requirement #6) */}
                     {scheduleFile && (uploadStatus === 'extracted' || uploadStatus === 'confirmed') && (
                       <div className="space-y-4 pt-2">
-                        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+                        <div className="p-4 rounded-2xl bg-amber-100 border-2 border-amber-300 flex items-start gap-3">
                           <span className="text-xl">⚠️</span>
-                          <div className="space-y-0.5 text-xs text-amber-900">
-                            <h4 className="font-bold">Review Uploaded Schedule</h4>
-                            <p>
+                          <div className="space-y-0.5 text-xs text-amber-950">
+                            <h4 className="font-extrabold">Review Uploaded Schedule</h4>
+                            <p className="font-semibold">
                               We never directly apply an extracted schedule without your verification. Please check, edit deadlines, or add missing Physics chapters below, then click <strong>"Confirm & Apply Reviewed Schedule"</strong>.
                             </p>
                           </div>
                         </div>
 
-                        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                        <div className="p-3.5 rounded-2xl bg-white border-2 border-emerald-300 flex items-center justify-between shadow-xs">
                           <div className="flex items-center gap-3">
-                            <span className="text-xl p-1.5 rounded-xl bg-white shadow-xs font-bold">📑</span>
+                            <span className="text-xl p-1.5 rounded-xl bg-emerald-100 shadow-xs font-bold">📑</span>
                             <div>
                               <h4 className="text-xs font-bold text-slate-900">{scheduleFile.name}</h4>
-                              <p className="text-[11px] text-slate-500">{scheduleFile.format} • {scheduleFile.size} • Extracted {extractedChapters.length} Physics chapters</p>
+                              <p className="text-[11px] font-semibold text-slate-500">{scheduleFile.format} • {scheduleFile.size} • Extracted {extractedChapters.length} Physics chapters</p>
                             </div>
                           </div>
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          <span className={`px-3 py-1 rounded-full text-xs font-extrabold ${
                             isScheduleConfirmed 
-                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                              : 'bg-amber-100 text-amber-800 border border-amber-200'
+                              ? 'bg-emerald-200 text-emerald-950 border border-emerald-400'
+                              : 'bg-amber-200 text-amber-950 border border-amber-400'
                           }`}>
                             {isScheduleConfirmed ? '✓ Schedule Verified' : 'Review Required'}
                           </span>
                         </div>
 
                         {/* Interactive Review Table */}
-                        <div className="space-y-2 bg-slate-50/50 p-4 rounded-2xl border border-slate-200/80">
-                          <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        <div className="space-y-2 bg-white p-4 rounded-2xl border-2 border-emerald-300 shadow-xs">
+                          <div className="flex justify-between items-center pb-2 border-b border-emerald-200">
+                            <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
                               Extracted Chapters ({extractedChapters.length})
                             </span>
                             <button
                               type="button"
                               onClick={handleAddRowToExtracted}
-                              className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1 cursor-pointer"
+                              className="text-xs font-extrabold text-emerald-900 hover:underline flex items-center gap-1 cursor-pointer"
                             >
                               <span>+ Add Chapter Row</span>
                             </button>
@@ -540,26 +520,26 @@ export default function ProfilePage() {
                           {extractedChapters.map((item, idx) => (
                             <div
                               key={item.id}
-                              className="p-3 rounded-xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+                              className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs"
                             >
                               <div className="flex items-center gap-3 flex-grow min-w-0">
-                                <span className="text-xs font-bold text-slate-400 w-5">{idx + 1}.</span>
+                                <span className="text-xs font-bold text-slate-500 w-5">{idx + 1}.</span>
                                 <input
                                   type="text"
                                   value={item.chapter}
                                   onChange={(e) => handleExtractedChapterNameChange(item.id, e.target.value)}
-                                  className="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500"
+                                  className="w-full px-3 py-1.5 rounded-lg border border-emerald-300 text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 bg-white"
                                 />
                               </div>
 
                               <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 text-xs bg-slate-50">
-                                  <span className="text-slate-400 font-semibold">📅 Deadline:</span>
+                                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-300 text-xs bg-white">
+                                  <span className="text-slate-500 font-bold">📅 Deadline:</span>
                                   <input
                                     type="date"
                                     value={item.deadline}
                                     onChange={(e) => handleExtractedDeadlineChange(item.id, e.target.value)}
-                                    className="bg-transparent text-slate-800 font-bold focus:outline-none cursor-pointer"
+                                    className="bg-transparent text-slate-900 font-bold focus:outline-none cursor-pointer"
                                   />
                                 </div>
 
@@ -580,7 +560,7 @@ export default function ProfilePage() {
                           <button
                             type="button"
                             onClick={handleConfirmExtractedSchedule}
-                            className="px-6 py-3 rounded-2xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 shadow-md shadow-emerald-600/20 transition-all flex items-center gap-2 cursor-pointer"
+                            className="px-6 py-3 rounded-2xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 shadow-md shadow-slate-900/10 transition-all flex items-center gap-2 cursor-pointer"
                           >
                             <span>✓ Confirm & Apply Reviewed Schedule</span>
                           </button>
@@ -594,26 +574,26 @@ export default function ProfilePage() {
                 {/* OPTION 2: ENTER MANUALLY WORKFLOW */}
                 {scheduleOption === 'manual' && (
                   <div className="space-y-6 animate-fadeIn">
-                    <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-100 space-y-1">
-                      <h3 className="text-xs font-bold text-emerald-900">Enter Physics Chapter Deadlines Manually</h3>
-                      <p className="text-xs text-emerald-700">
+                    <div className="p-4 rounded-2xl bg-white border-2 border-emerald-300 space-y-1">
+                      <h3 className="text-xs font-extrabold text-emerald-950">Enter Physics Chapter Deadlines Manually</h3>
+                      <p className="text-xs font-medium text-emerald-900">
                         Select a chapter, choose its target completion deadline, then click <strong>"Add Next Chapter"</strong> to build your schedule step-by-step.
                       </p>
                     </div>
 
                     {/* Chapter & Deadline Input Card */}
-                    <div className="p-5 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-4">
+                    <div className="p-5 rounded-2xl bg-white border-2 border-emerald-300 space-y-4 shadow-xs">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         
                         {/* Select Chapter */}
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                          <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
                             1. Select Chapter <span className="text-rose-500">*</span>
                           </label>
                           <select
                             value={manualChapter}
                             onChange={(e) => setManualChapter(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                            className="w-full px-4 py-2.5 rounded-xl border-2 border-emerald-300 bg-emerald-50/50 text-slate-900 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                           >
                             {presetPhysicsChapters.map((ch) => (
                               <option key={ch} value={ch}>{ch}</option>
@@ -624,7 +604,7 @@ export default function ProfilePage() {
                         {/* Custom Chapter Name if selected */}
                         {manualChapter === 'Custom Chapter...' && (
                           <div className="space-y-1.5 sm:col-span-2">
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                            <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
                               Custom Chapter Name <span className="text-rose-500">*</span>
                             </label>
                             <input
@@ -633,14 +613,14 @@ export default function ProfilePage() {
                               placeholder="e.g. Center of Mass & Collisions"
                               value={customChapterName}
                               onChange={(e) => setCustomChapterName(e.target.value)}
-                              className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                              className="w-full px-4 py-2.5 rounded-xl border-2 border-emerald-300 bg-emerald-50/50 text-slate-900 text-xs font-bold focus:outline-none focus:border-emerald-500"
                             />
                           </div>
                         )}
 
                         {/* Select Deadline */}
                         <div className="space-y-1.5">
-                          <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                          <label className="block text-xs font-extrabold uppercase tracking-wider text-slate-700">
                             2. Select Deadline Date <span className="text-rose-500">*</span>
                           </label>
                           <input
@@ -648,7 +628,7 @@ export default function ProfilePage() {
                             required
                             value={manualDeadline}
                             onChange={(e) => setManualDeadline(e.target.value)}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                            className="w-full px-4 py-2.5 rounded-xl border-2 border-emerald-300 bg-emerald-50/50 text-slate-900 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                           />
                         </div>
                       </div>
@@ -667,14 +647,14 @@ export default function ProfilePage() {
                     {/* Manually Added Chapter List */}
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                        <h4 className="text-xs font-extrabold text-emerald-950 uppercase tracking-wider">
                           Your Scheduled Physics Chapters ({physicsDeadlines.length})
                         </h4>
-                        <span className="text-[11px] text-slate-400">Chapters saved in sequential order</span>
+                        <span className="text-[11px] font-semibold text-emerald-900">Chapters saved in sequential order</span>
                       </div>
 
                       {physicsDeadlines.length === 0 ? (
-                        <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 text-center text-slate-400 text-xs">
+                        <div className="p-6 rounded-2xl border-2 border-dashed border-emerald-300 bg-white text-center text-emerald-900 font-medium text-xs">
                           No Physics chapters added yet. Select a chapter and deadline above to add your first milestone!
                         </div>
                       ) : (
@@ -682,17 +662,17 @@ export default function ProfilePage() {
                           {physicsDeadlines.map((item, idx) => (
                             <div
                               key={item.id}
-                              className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-300 transition-all flex items-center justify-between gap-3 shadow-xs"
+                              className="p-3.5 rounded-2xl bg-white border-2 border-emerald-300 hover:border-emerald-500 transition-all flex items-center justify-between gap-3 shadow-xs"
                             >
                               <div className="flex items-center gap-3">
-                                <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 flex items-center justify-center text-xs font-bold">
+                                <span className="w-6 h-6 rounded-lg bg-emerald-200 text-emerald-950 flex items-center justify-center text-xs font-bold">
                                   {idx + 1}
                                 </span>
                                 <span className="text-xs font-bold text-slate-900">{item.chapter}</span>
                               </div>
 
                               <div className="flex items-center gap-3">
-                                <span className="px-3 py-1 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700">
+                                <span className="px-3 py-1 rounded-xl bg-emerald-100 border border-emerald-300 text-xs font-bold text-emerald-950">
                                   📅 {item.deadline}
                                 </span>
                                 <button
@@ -718,23 +698,23 @@ export default function ProfilePage() {
 
 
           {/* SECTION 3: PREFERRED WHATSAPP CHECK-IN TIME */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 text-left space-y-6">
-            <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+          <div className="bg-[#f3e8ff] rounded-3xl p-6 sm:p-8 shadow-xl shadow-purple-900/10 border-2 border-purple-300/80 text-left space-y-6">
+            <div className="flex items-center gap-3 border-b-2 border-purple-200/80 pb-4">
+              <div className="w-10 h-10 rounded-2xl bg-purple-200 text-purple-900 flex items-center justify-center font-bold text-lg shadow-xs">
                 💬
               </div>
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900">3. Preferred WhatsApp Check-in Time</h2>
-                <p className="text-xs text-slate-500">Automated nightly study progress prompt dispatch time</p>
+                <h2 className="text-lg sm:text-xl font-extrabold text-purple-950">Preferred WhatsApp Check-in Time</h2>
+                <p className="text-xs font-semibold text-purple-800/80">Automated nightly study progress prompt dispatch time</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                <label className="block text-xs font-extrabold uppercase tracking-wider text-purple-950">
                   Select Nightly Prompt Time
                 </label>
-                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-100">
+                <span className="text-[11px] font-extrabold text-purple-950 bg-purple-200 px-2.5 py-0.5 rounded-md border border-purple-300">
                   Default: 08:00 PM
                 </span>
               </div>
@@ -757,10 +737,10 @@ export default function ProfilePage() {
                         setCheckInTime(t.id);
                         setCustomTime('');
                       }}
-                      className={`py-3 px-3 rounded-2xl text-xs font-bold transition-all border cursor-pointer ${
+                      className={`py-3 px-3 rounded-2xl text-xs font-bold transition-all border-2 cursor-pointer ${
                         isSelected
-                          ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
-                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                          ? 'bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/10'
+                          : 'bg-white text-purple-950 border-purple-300 hover:bg-purple-100'
                       }`}
                     >
                       {t.label}
@@ -772,7 +752,7 @@ export default function ProfilePage() {
               {/* Custom Time Picker */}
               <div className="pt-2 flex items-center justify-between flex-wrap gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold text-slate-500">Or custom time:</span>
+                  <span className="text-xs font-bold text-purple-950">Or custom time:</span>
                   <input
                     type="time"
                     value={customTime}
@@ -780,42 +760,39 @@ export default function ProfilePage() {
                       setCustomTime(e.target.value);
                       if (e.target.value) setCheckInTime(e.target.value);
                     }}
-                    className="px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                    className="px-3.5 py-2 rounded-xl border-2 border-purple-300 bg-white text-xs font-bold focus:outline-none focus:border-purple-600"
                   />
                 </div>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] font-semibold text-purple-800">
                   * If unconfigured, automatically defaults to 8:00 PM. Change anytime later in Settings.
                 </p>
               </div>
 
               {/* Automated Check-in Live Message Preview */}
-              <div className="mt-4 p-5 rounded-2xl bg-emerald-950 text-emerald-100 border border-emerald-800 space-y-2.5 text-xs">
-                <div className="flex items-center justify-between text-emerald-400 font-bold border-b border-emerald-800/80 pb-2">
+              <div className="mt-4 p-5 rounded-2xl bg-slate-900 text-slate-100 border border-slate-800 space-y-2.5 text-xs">
+                <div className="flex items-center justify-between text-amber-300 font-bold border-b border-slate-800/80 pb-2">
                   <span>📱 Automated WhatsApp Prompt Preview</span>
-                  <span className="bg-emerald-900 px-2.5 py-0.5 rounded-full text-[10px]">
+                  <span className="bg-amber-950 text-amber-300 px-2.5 py-0.5 rounded-full text-[10px] border border-amber-800/50">
                     Time: {formattedTimeDisplay(checkInTime)}
                   </span>
                 </div>
                 <p className="leading-relaxed">
                   "Hey <strong className="text-white">{fullName || 'Student'}</strong>! 🔔 It's {formattedTimeDisplay(checkInTime)}. Time for your nightly Physics study check-in! Did you complete your target chapter <strong className="text-white">'{physicsDeadlines[0]?.chapter || 'Kinematics & Motion in 2D'}'</strong> today?"
                 </p>
-                <div className="text-[11px] text-emerald-400 italic">
-                  Sent to: <span className="font-semibold text-emerald-200">{activeWhatsappNumber}</span> • Reply "Yes", "Partial", or "No" to auto-log your progress.
-                </div>
               </div>
             </div>
           </div>
 
           {/* ACTION BUTTON & SUBMIT */}
-          <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-[#fff1f2] rounded-3xl p-6 shadow-xl shadow-rose-900/10 border-2 border-rose-300/80 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-left">
-              <h3 className="text-sm font-bold text-slate-900">Ready to save your profile?</h3>
-              <p className="text-xs text-slate-500">Your Physics schedule and nightly check-in will be immediately active.</p>
+              <h3 className="text-sm font-extrabold text-rose-950">Ready to save your profile?</h3>
+              <p className="text-xs font-semibold text-rose-800">Your Physics schedule and nightly check-in will be immediately active.</p>
             </div>
 
             <button
               type="submit"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-lg shadow-slate-900/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
             >
               <span>Save & Activate Profile</span>
               <span>⚡</span>

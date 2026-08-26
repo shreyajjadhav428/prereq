@@ -1,35 +1,52 @@
 @import "tailwindcss";
 
+@theme {
+  --text-xs: 0.875rem;   /* 14px (was 12px) */
+  --text-sm: 1rem;       /* 16px (was 14px) */
+  --text-base: 1.125rem; /* 18px (was 16px) */
+  --text-lg: 1.25rem;    /* 20px (was 18px) */
+  --text-xl: 1.5rem;     /* 24px (was 20px) */
+  --text-2xl: 1.875rem;  /* 30px (was 24px) */
+  --text-3xl: 2.25rem;   /* 36px (was 30px) */
+  --text-4xl: 3rem;      /* 48px (was 36px) */
+}
+
 :root {
   --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', 'Lora', Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-cursive: 'Dancing Script', 'Pacifico', 'Great Vibes', cursive;
   
-  /* Brand & Accent Colors inspired by modern dashboard design */
-  --primary-blue: #3b82f6;
-  --primary-blue-hover: #2563eb;
-  --primary-blue-light: #eff6ff;
+  /* Brand Primary & Contrast Accent */
+  --primary-brand: #0f172a;
+  --primary-brand-hover: #1e293b;
   
-  /* Soft Pastel Card Backgrounds */
-  --pastel-blue: #eef2ff;
-  --pastel-green: #ecfdf5;
-  --pastel-yellow: #fffbeb;
-  --pastel-rose: #fff1f2;
-  --pastel-purple: #f5f3ff;
+  /* Rich Multi-Pastel Palette (No Blue) */
+  --pastel-sage: #dcfce7;
+  --pastel-sage-text: #14532d;
+  --pastel-peach: #ffe4e6;
+  --pastel-peach-text: #9f1239;
+  --pastel-lavender: #f3e8ff;
+  --pastel-lavender-text: #581c87;
+  --pastel-amber: #fef3c7;
+  --pastel-amber-text: #78350f;
+  --pastel-rose: #ffe4e6;
+  --pastel-mint: #ccfbf1;
   
-  /* Neutral Color Palette */
-  --bg-main: #f8fafc;
+  /* Neutral Warm Canvas Palette */
+  --bg-main: #f8f7f4;
   --bg-card: #ffffff;
-  --text-main: #1e293b;
+  --text-main: #0f172a;
   --text-muted: #64748b;
   --border-light: #f1f5f9;
   --border-subtle: #e2e8f0;
 
   /* Typography System */
   --sans: var(--font-inter);
-  --heading: var(--font-inter);
+  --heading: var(--font-serif);
 
   font: 15px/1.5 var(--font-inter);
   letter-spacing: normal;
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text-main);
   background: var(--bg-main);
   font-synthesis: none;
@@ -41,33 +58,53 @@
 body {
   margin: 0;
   font-family: var(--font-inter);
-  background-color: var(--bg-main);
+  background-color: #ffffff;
+  /* Sleek White to Light Grey Gradient canvas with subtle micro texture overlay */
+  background-image: 
+    /* 1. Micro Paper Grain / Organic Noise Texture Overlay */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.045'/%3E%3C/svg%3E"),
+    /* 2. Subtle Micro Dot Grid Mesh */
+    radial-gradient(circle at 1.5px 1.5px, rgba(100, 116, 139, 0.08) 1.5px, transparent 0),
+    /* 3. White to Light Grey Gradient Canvas */
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 40%, #f1f5f9 100%);
+  background-size: 180px 180px, 24px 24px, 100% 100%;
+  background-attachment: fixed;
   color: var(--text-main);
+  min-height: 100vh;
+}
+
+.font-cursive {
+  font-family: var(--font-cursive);
 }
 
 /* Typography Hierarchy & CSS References */
+h1, h2, h3, h4, h5, h6, .display-h1, .section-h2, .card-h3, .font-serif-heading {
+  font-family: var(--font-serif);
+  letter-spacing: -0.3px;
+}
+
 h1, .display-h1 {
-  font-family: var(--font-inter);
-  font-size: 50px;
-  font-weight: 750;
-  line-height: 1.05;
-  letter-spacing: -1.5px;
+  font-family: var(--font-serif);
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
   color: var(--text-main);
 }
 
 h2, .section-h2 {
-  font-family: var(--font-inter);
-  font-size: 30px;
+  font-family: var(--font-serif);
+  font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
   color: var(--text-main);
 }
 
 h3, .card-h3 {
-  font-family: var(--font-inter);
-  font-size: 18px;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
   line-height: 1.3;
   color: var(--text-main);
 }
