@@ -2,6 +2,8 @@ import { Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ProfilePage from './pages/ProfilePage';
+import GraphPage from './pages/GraphPage';
 import heroImg from './assets/hero.png';
 import reactLogo from './assets/react.svg';
 import viteLogo from './assets/vite.svg';
@@ -15,6 +17,18 @@ function HomePage() {
       <header className="w-full py-4 px-6 flex justify-between items-center border-b border-[var(--border)] mb-8">
         <div className="font-bold text-xl text-[var(--text-h)]">My App</div>
         <div className="flex gap-4">
+          <Link
+            to="/graph"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors border border-indigo-200"
+          >
+            🗺️ Dependency Graph
+          </Link>
+          <Link
+            to="/profile"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors border border-emerald-200"
+          >
+            Profile Setup
+          </Link>
           <Link
             to="/login"
             className="px-4 py-2 text-sm font-medium rounded-lg hover:bg-[var(--accent-bg)] transition-colors border border-[var(--border)]"
@@ -146,6 +160,10 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/graph" element={<GraphPage />} />
     </Routes>
   );
 }
+
+
