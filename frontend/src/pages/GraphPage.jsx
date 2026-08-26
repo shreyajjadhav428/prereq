@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 // Complete Predefined JEE Physics Dependency Graph Data with Larger Boxes & Perfect Spacing
 const GRAPH_DATA = [
@@ -626,8 +626,8 @@ export default function GraphPage() {
   return (
     <div className="min-h-screen bg-transparent text-slate-800 font-['Inter'] pb-24">
       
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+      {/* Top Navigation Bar with Centered NavLinks */}
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between relative shadow-xs">
         <div className="flex items-center">
           <Link to="/" className="group flex items-center">
             <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
@@ -636,12 +636,53 @@ export default function GraphPage() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link
-            to="/profile"
-            className="text-sm font-extrabold text-slate-700 hover:text-slate-900 px-5 py-2.5 rounded-2xl border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 shadow-xs hover:shadow-md transition-all flex items-center gap-2"
+        {/* Centered Horizontal NavLinks */}
+        <nav className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 shadow-2xs sm:absolute sm:left-1/2 sm:-translate-x-1/2">
+          <NavLink
+            to="/graph"
+            className={({ isActive }) =>
+              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`
+            }
           >
-            ⚙️ Profile & Schedule
+            🗺️ Dependency Graph
+          </NavLink>
+          <NavLink
+            to="/recover"
+            className={({ isActive }) =>
+              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`
+            }
+          >
+            🚨 Recovery Plan
+          </NavLink>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`
+            }
+          >
+            ⚙️ Profile & Check-in
+          </NavLink>
+        </nav>
+
+        <div className="flex items-center">
+          <Link
+            to="/login"
+            className="text-xs sm:text-sm font-extrabold text-slate-600 hover:text-rose-600 px-3.5 py-1.5 rounded-full border border-slate-200 hover:border-rose-300 hover:bg-rose-50/80 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>Logout</span>
+            <span className="text-xs">🚪</span>
           </Link>
         </div>
       </header>

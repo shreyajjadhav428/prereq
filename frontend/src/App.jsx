@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import GraphPage from './pages/GraphPage';
+import RecoverPage from './pages/RecoverPage';
 import heroImg from './assets/hero.png';
 import reactLogo from './assets/react.svg';
 import viteLogo from './assets/vite.svg';
@@ -18,10 +19,16 @@ function HomePage() {
         <div className="font-bold text-xl text-[var(--text-h)]">My App</div>
         <div className="flex gap-4">
           <Link
+            to="/recover"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors border border-rose-200"
+          >
+            🚨 Recovery Plan
+          </Link>
+          <Link
             to="/graph"
             className="px-4 py-2 text-sm font-medium rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors border border-indigo-200"
           >
-            🗺️ Dependency Graph
+            MAP Dependency Graph
           </Link>
           <Link
             to="/profile"
@@ -162,6 +169,7 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/graph" element={<GraphPage />} />
+      <Route path="/recover" element={<RecoverPage />} />
     </Routes>
   );
 }
