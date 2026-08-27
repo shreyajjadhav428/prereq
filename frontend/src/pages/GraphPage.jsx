@@ -1,871 +1,361 @@
 import { useState, useMemo } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
-// Complete Predefined JEE Physics Dependency Graph Data with Larger Boxes & Perfect Spacing
+// ─── LAYOUT CONSTANTS ────────────────────────────────────────────────────────
+const W = 2200;      // SVG viewBox width
+const NW = 300;      // default node width
+const NH = 96;       // default node height
+const GAP_Y = 120;   // vertical gap between zone rows
+
+// ─── ZONE Y POSITIONS ────────────────────────────────────────────────────────
+const ZY = {
+  found:   40,
+  mech1:  260,
+  mech2:  400,
+  mech3:  540,
+  mech4:  680,
+  mech5:  820,
+  mech6:  960,
+  wave1: 1100,
+  wave2: 1240,
+  mod1:  1380,
+  mod2:  1520,
+  therm1:1660,
+  therm2:1800,
+};
+
+// Helper to center-place a node given center-x
+const X_OFFSET = 80;
+const nx = (cx) => cx - NW / 2 + X_OFFSET;
+
+// ─── GRAPH DATA ───────────────────────────────────────────────────────────────
+// x/y = top-left corner of node; w/h = dimensions
 const GRAPH_DATA = [
-  // 1. Mathematics & Tools (Purple) - Top Horizontal Row (y = 60)
-  {
-    id: 'math-1',
-    title: 'Physical Quantities & Units',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 40, y: 60,
-    prereqs: [],
-    hours: 6, weightage: '3%',
-    description: 'SI units, dimensions, dimensional analysis, and error propagation fundamentals.',
-  },
-  {
-    id: 'math-2',
-    title: 'Measurement & Errors',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 240, y: 60,
-    prereqs: ['math-1'],
-    hours: 8, weightage: '3%',
-    description: 'Vernier calipers, screw gauge, least count, absolute/relative error calculation.',
-  },
-  {
-    id: 'math-3',
-    title: 'Vectors',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 440, y: 60,
-    prereqs: ['math-4'],
-    hours: 10, weightage: '4%',
-    description: 'Vector addition, dot product, cross product, resolution of vectors in 2D & 3D.',
-  },
-  {
-    id: 'math-4',
-    title: 'Mathematical Tools (Algebra, Trig, Calculus)',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 640, y: 50, w: 210, h: 95, // Hub node slightly larger
-    prereqs: [],
-    hours: 14, weightage: '5%',
-    description: 'Essential algebra, trigonometry identities, graphs, limits, and derivative concepts.',
-  },
-  {
-    id: 'math-5',
-    title: 'Functions & Graphs',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 880, y: 60,
-    prereqs: ['math-4'],
-    hours: 8, weightage: '2%',
-    description: 'Polynomial, trigonometric, exponential & logarithmic graphs and slope analysis.',
-  },
-  {
-    id: 'math-6',
-    title: 'Differentiation',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 1080, y: 60,
-    prereqs: ['math-4', 'math-5'],
-    hours: 10, weightage: '4%',
-    description: 'Rate of change, maxima/minima applications, chain rule, and physics applications.',
-  },
-  {
-    id: 'math-7',
-    title: 'Integration',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 1280, y: 60,
-    prereqs: ['math-6'],
-    hours: 12, weightage: '4%',
-    description: 'Indefinite & definite integrals, area under curves, continuous summation in physics.',
-  },
-  {
-    id: 'math-8',
-    title: 'Basic Mathematics for Physics',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 40, y: 370,
-    prereqs: ['math-4'],
-    hours: 6, weightage: '2%',
-    description: 'Binomial approximation, series expansion, and coordinate geometry basics.',
-  },
-  {
-    id: 'math-9',
-    title: 'Vector Calculus',
-    category: 'Mathematics & Tools',
-    catKey: 'math',
-    color: 'purple',
-    x: 1370, y: 520,
-    prereqs: ['math-3', 'math-7'],
-    hours: 12, weightage: '4%',
-    description: 'Gradient, divergence, line/surface integrals used in field theory & electromagnetism.',
-  },
+  // ── FOUNDATION ROW: 6 nodes centered across W=2200, spacing=340, start=170 ────
+  // Centers: 170, 510, 850, 1190(f4 hub), 1530, 1870. Span: 170..1990 → padded ✓
+  { id: 'f1', title: 'Physical Quantities & Units', color: 'purple', x: nx(170),  y: ZY.found, w: NW, h: NH, prereqs: [] },
+  { id: 'f2', title: 'Measurement & Errors',        color: 'purple', x: nx(510),  y: ZY.found, w: NW, h: NH, prereqs: ['f1'] },
+  { id: 'f3', title: 'Vectors',                     color: 'purple', x: nx(850),  y: ZY.found, w: NW, h: NH, prereqs: ['f1'] },
+  { id: 'f4', title: 'Mathematical Tools (Algebra, Trig, Calculus)', color: 'purple', x: nx(1190),y: ZY.found-16, w: 320, h: NH+32, prereqs: [] },
+  { id: 'f5', title: 'Functions & Graphs',          color: 'purple', x: nx(1530), y: ZY.found, w: NW, h: NH, prereqs: ['f4'] },
+  { id: 'f6', title: 'Differentiation',             color: 'purple', x: nx(1870), y: ZY.found, w: NW, h: NH, prereqs: ['f4'] },
 
-  // 2. Mechanics (Blue) - Left-Center Block
-  {
-    id: 'mech-1',
-    title: 'Kinematics in One Dimension',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 200, y: 210,
-    prereqs: ['math-4', 'math-6'],
-    hours: 12, weightage: '5%',
-    description: 'Position, velocity, acceleration, motion graphs, and equations of motion.',
-  },
-  {
-    id: 'mech-2',
-    title: 'Kinematics in Two Dimensions',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 400, y: 210,
-    prereqs: ['mech-1', 'math-3'],
-    hours: 14, weightage: '5%',
-    description: 'Projectile motion, circular motion, relative velocity in 2D.',
-  },
-  {
-    id: 'mech-3',
-    title: 'Laws of Motion',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 600, y: 210,
-    prereqs: ['mech-2', 'math-3'],
-    hours: 16, weightage: '6%',
-    description: "Newton's 3 laws, free body diagrams, friction (static/kinetic), pulley systems.",
-  },
-  {
-    id: 'mech-4',
-    title: 'Work, Energy & Power',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 310,
-    prereqs: ['mech-2', 'mech-3', 'math-7'],
-    hours: 14, weightage: '6%',
-    description: 'Work-energy theorem, conservative forces, potential energy curves, collisions.',
-  },
-  {
-    id: 'mech-5',
-    title: 'System of Particles & Rotational Motion',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 400,
-    prereqs: ['mech-4', 'math-3'],
-    hours: 20, weightage: '8%',
-    description: 'Center of mass, torque, moment of inertia, angular momentum, rolling motion.',
-  },
-  {
-    id: 'mech-6',
-    title: 'Gravitation',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 490,
-    prereqs: ['mech-5', 'mech-4'],
-    hours: 12, weightage: '4%',
-    description: "Kepler's laws, gravitational potential & field, escape & orbital velocity.",
-  },
-  {
-    id: 'mech-7',
-    title: 'Properties of Solids & Liquids',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 580,
-    prereqs: ['mech-3'],
-    hours: 10, weightage: '4%',
-    description: "Elasticity, Young's modulus, stress-strain curve, surface tension, viscosity.",
-  },
-  {
-    id: 'mech-8',
-    title: 'Mechanical Properties of Fluids',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 670,
-    prereqs: ['mech-7'],
-    hours: 12, weightage: '5%',
-    description: "Pascal's law, Archimedes' principle, fluid dynamics, Bernoulli's equation.",
-  },
-  {
-    id: 'mech-9',
-    title: 'Oscillations',
-    category: 'Mechanics',
-    catKey: 'mechanics',
-    color: 'blue',
-    x: 500, y: 760,
-    prereqs: ['mech-4', 'mech-8'],
-    hours: 14, weightage: '5%',
-    description: 'Simple Harmonic Motion (SHM), spring-mass system, pendulum, damped oscillations.',
-  },
+  // ── MECHANICS ROW 1: 5 nodes, spacing=380, start=190 ────────────────────────
+  // Centers: 190, 570, 950, 1330(thermal), 1710(em). Span: 190..1860 ✓
+  { id: 'm1', title: 'Kinematics in One Dimension',  color: 'blue',  x: nx(190),  y: ZY.mech1, w: NW, h: NH, prereqs: ['f4', 'f6'] },
+  { id: 'm2', title: 'Kinematics in Two Dimensions', color: 'blue',  x: nx(570),  y: ZY.mech1, w: NW, h: NH, prereqs: ['m1', 'f3'] },
+  { id: 'm3', title: 'Laws of Motion',               color: 'blue',  x: nx(950),  y: ZY.mech1, w: NW, h: NH, prereqs: ['m2'] },
+  { id: 't1', title: 'Thermal Expansion',            color: 'amber', x: nx(1330), y: ZY.mech1, w: NW, h: NH, prereqs: ['f4'] },
+  { id: 'e1', title: 'Electric Charges & Fields',    color: 'rose',  x: nx(1710), y: ZY.mech1, w: NW, h: NH, prereqs: ['f5'] },
 
-  // 3. Thermal & Statistical (Orange/Amber) - Center Column
-  {
-    id: 'therm-1',
-    title: 'Thermal Expansion',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 210,
-    prereqs: ['math-4'],
-    hours: 8, weightage: '3%',
-    description: 'Linear, superficial, and volumetric expansion of solids, liquids, and anomalous water expansion.',
-  },
-  {
-    id: 'therm-2',
-    title: 'Calorimetry',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 300,
-    prereqs: ['therm-1'],
-    hours: 8, weightage: '3%',
-    description: 'Specific heat capacity, principle of calorimetry, phase change, latent heat of fusion & vaporization.',
-  },
-  {
-    id: 'therm-3',
-    title: 'Heat Transfer',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 390,
-    prereqs: ['therm-2'],
-    hours: 12, weightage: '4%',
-    description: "Conduction, thermal resistance, convection, radiation, Stefan's law & Newton's law of cooling.",
-  },
-  {
-    id: 'therm-4',
-    title: 'Kinetic Theory of Gases',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 480,
-    prereqs: ['therm-3'],
-    hours: 10, weightage: '4%',
-    description: 'Ideal gas laws, rms speed, degrees of freedom, law of equipartition of energy, mean free path.',
-  },
-  {
-    id: 'therm-5',
-    title: 'Thermodynamics (Laws)',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 570,
-    prereqs: ['therm-4'],
-    hours: 14, weightage: '6%',
-    description: 'Zeroth, 1st & 2nd laws of thermodynamics, isothermal, adiabatic, isobaric processes, heat engines.',
-  },
-  {
-    id: 'therm-6',
-    title: 'Entropy',
-    category: 'Thermal & Statistical',
-    catKey: 'thermal',
-    color: 'amber',
-    x: 770, y: 660,
-    prereqs: ['therm-5'],
-    hours: 6, weightage: '2%',
-    description: 'Reversible/irreversible processes, Carnot cycle efficiency, entropy changes in thermodynamic systems.',
-  },
+  // ── MECHANICS ROW 2: side node + 3 column nodes ──────────────────────────────
+  { id: 'f7', title: 'Basic Mathematics for Physics', color: 'purple', x: nx(125),  y: ZY.mech2, w: 185, h: NH, prereqs: ['f4'] },
+  { id: 'm4', title: 'Work, Energy & Power',           color: 'blue',  x: nx(700),  y: ZY.mech2, w: NW, h: NH, prereqs: ['m2', 'm3'] },
+  { id: 't2', title: 'Calorimetry',                    color: 'amber', x: nx(1330), y: ZY.mech2, w: NW, h: NH, prereqs: ['t1'] },
+  { id: 'e2', title: "Gauss's Law",                    color: 'rose',  x: nx(1710), y: ZY.mech2, w: NW, h: NH, prereqs: ['e1'] },
 
-  // 4. Electromagnetism (Red/Rose) - Right-Center Column
-  {
-    id: 'em-1',
-    title: 'Electric Charges & Fields',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 210,
-    prereqs: ['math-7', 'math-9'],
-    hours: 16, weightage: '6%',
-    description: "Coulomb's law, electric field lines, electric dipole, torque in uniform field, electric flux.",
-  },
-  {
-    id: 'em-2',
-    title: "Gauss's Law",
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 300,
-    prereqs: ['em-1'],
-    hours: 10, weightage: '4%',
-    description: "Applications of Gauss's Law to spheres, infinite wires, planar sheets, conductor field properties.",
-  },
-  {
-    id: 'em-3',
-    title: 'Electric Potential & Capacitance',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 390,
-    prereqs: ['em-2', 'mech-4'],
-    hours: 16, weightage: '6%',
-    description: 'Electrostatic potential, equipotential surfaces, parallel plate capacitor, dielectrics, energy storage.',
-  },
-  {
-    id: 'em-4',
-    title: 'Current Electricity',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 480,
-    prereqs: ['em-3'],
-    hours: 18, weightage: '7%',
-    description: "Ohm's law, drift velocity, Kirchhoff's rules, Wheatstone bridge, potentiometer, meter bridge.",
-  },
-  {
-    id: 'em-5',
-    title: 'Magnetic Effects of Current',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 570,
-    prereqs: ['em-4', 'math-9'],
-    hours: 18, weightage: '7%',
-    description: 'Biot-Savart law, Ampere circuital law, Lorentz force, cyclotron, magnetic force on current wire.',
-  },
-  {
-    id: 'em-6',
-    title: 'Magnetism & Matter',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 660,
-    prereqs: ['em-5'],
-    hours: 10, weightage: '3%',
-    description: 'Bar magnet, Earth magnetism, magnetic dipole moment, dia-, para-, and ferromagnetic materials.',
-  },
-  {
-    id: 'em-7',
-    title: 'Electromagnetic Induction',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 750,
-    prereqs: ['em-6', 'math-9'],
-    hours: 16, weightage: '6%',
-    description: "Faraday's laws, Lenz's law, motional EMF, self & mutual inductance, eddy currents.",
-  },
-  {
-    id: 'em-8',
-    title: 'Alternating Current',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 840,
-    prereqs: ['em-7'],
-    hours: 12, weightage: '5%',
-    description: 'AC voltage across R, L, C, series LCR resonant circuit, power factor, transformer principle.',
-  },
-  {
-    id: 'em-9',
-    title: 'Electromagnetic Waves',
-    category: 'Electromagnetism',
-    catKey: 'em',
-    color: 'rose',
-    x: 1040, y: 930,
-    prereqs: ['em-8'],
-    hours: 8, weightage: '3%',
-    description: 'Displacement current, Maxwell equations summary, EM spectrum properties and momentum transfer.',
-  },
+  // ── MECHANICS ROW 3 ──────────────────────────────────────────────────────────
+  { id: 'm5', title: 'System of Particles & Rotational Motion', color: 'blue',  x: nx(700),  y: ZY.mech3, w: NW, h: NH, prereqs: ['m4'] },
+  { id: 't3', title: 'Heat Transfer',                           color: 'amber', x: nx(1330), y: ZY.mech3, w: NW, h: NH, prereqs: ['t2'] },
+  { id: 'e3', title: 'Electric Potential & Capacitance',        color: 'rose',  x: nx(1710), y: ZY.mech3, w: NW, h: NH, prereqs: ['e2'] },
 
-  // 5. Waves & Optics (Green) - Lower Middle
-  {
-    id: 'waves-1',
-    title: 'Waves',
-    category: 'Waves & Oscillations',
-    catKey: 'waves',
-    color: 'green',
-    x: 500, y: 865,
-    prereqs: ['mech-9'],
-    hours: 14, weightage: '5%',
-    description: 'Transverse & longitudinal wave equation, wave speed, principle of superposition, standing waves.',
-  },
-  {
-    id: 'waves-2',
-    title: 'Sound Waves',
-    category: 'Waves & Oscillations',
-    catKey: 'waves',
-    color: 'green',
-    x: 370, y: 955,
-    prereqs: ['waves-1'],
-    hours: 12, weightage: '4%',
-    description: 'Speed of sound in gases/solids, organ pipes, resonance tube, beats, Doppler effect.',
-  },
-  {
-    id: 'waves-3',
-    title: 'Wave Optics',
-    category: 'Waves & Oscillations',
-    catKey: 'waves',
-    color: 'green',
-    x: 620, y: 955,
-    prereqs: ['waves-1'],
-    hours: 14, weightage: '5%',
-    description: "Huygens principle, Young's double slit interference, diffraction at single slit, polarization.",
-  },
-  {
-    id: 'waves-4',
-    title: 'Ray Optics',
-    category: 'Waves & Oscillations',
-    catKey: 'waves',
-    color: 'green',
-    x: 620, y: 1045,
-    prereqs: ['waves-3'],
-    hours: 18, weightage: '7%',
-    description: 'Reflection, refraction, total internal reflection, spherical mirrors/lenses, prisms, optical instruments.',
-  },
+  // ── MECHANICS ROW 4 ──────────────────────────────────────────────────────────
+  { id: 'm6', title: 'Gravitation',              color: 'blue',  x: nx(700),  y: ZY.mech4, w: NW, h: NH, prereqs: ['m5'] },
+  { id: 't4', title: 'Kinetic Theory of Gases', color: 'amber', x: nx(1330), y: ZY.mech4, w: NW, h: NH, prereqs: ['t3'] },
+  { id: 'e4', title: 'Current Electricity',     color: 'rose',  x: nx(1710), y: ZY.mech4, w: NW, h: NH, prereqs: ['e3'] },
 
-  // 6. Modern Physics & Experimental (Teal/Cyan) - Bottom Block
-  {
-    id: 'mod-1',
-    title: 'Dual Nature of Radiation & Matter',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 40, y: 1170,
-    prereqs: ['waves-3', 'em-9'],
-    hours: 10, weightage: '4%',
-    description: 'Photon theory, de Broglie wavelength of matter waves, Davisson-Germer experiment.',
-  },
-  {
-    id: 'mod-2',
-    title: 'Photoelectric Effect',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 250, y: 1170,
-    prereqs: ['mod-1'],
-    hours: 8, weightage: '4%',
-    description: "Einstein's photoelectric equation, stopping potential, work function, intensity vs frequency graphs.",
-  },
-  {
-    id: 'mod-3',
-    title: 'Atomic Structure',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 460, y: 1170,
-    prereqs: ['mod-1', 'mech-6'],
-    hours: 12, weightage: '5%',
-    description: 'Rutherford alpha scattering, Bohr model of hydrogen atom, energy levels, Rydberg formula, X-rays.',
-  },
-  {
-    id: 'mod-4',
-    title: 'Nuclei',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 670, y: 1170,
-    prereqs: ['mod-3'],
-    hours: 10, weightage: '4%',
-    description: 'Nuclear size/density, mass defect, binding energy per nucleon, nuclear fission and fusion.',
-  },
-  {
-    id: 'mod-5',
-    title: 'Semiconductor Electronics',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 880, y: 1170,
-    prereqs: ['em-4', 'mod-1'],
-    hours: 16, weightage: '6%',
-    description: 'Energy bands, intrinsic/extrinsic p-n junction diode, rectifiers, Zener diode, logic gates.',
-  },
-  {
-    id: 'mod-6',
-    title: 'Communication Systems',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 1090, y: 1170,
-    prereqs: ['mod-5', 'em-9'],
-    hours: 8, weightage: '3%',
-    description: 'Bandwidth, signal transmission modes, amplitude modulation (AM) index, transmitter/receiver layout.',
-  },
-  {
-    id: 'mod-7',
-    title: 'Quantum Mechanics',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 460, y: 1270,
-    prereqs: ['mod-3'],
-    hours: 8, weightage: '3%',
-    description: 'Wavefunctions, Heisenberg uncertainty principle, 1D potential well introductory principles.',
-  },
-  {
-    id: 'mod-8',
-    title: 'Radioactivity',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 670, y: 1270,
-    prereqs: ['mod-4'],
-    hours: 8, weightage: '3%',
-    description: 'Alpha, beta, gamma decay laws, half-life & mean life equations, radioactive equilibrium.',
-  },
-  {
-    id: 'mod-9',
-    title: 'Experimental Skills & Data Analysis',
-    category: 'Modern Physics',
-    catKey: 'modern',
-    color: 'teal',
-    x: 540, y: 1375, w: 220, h: 85, // Bottom center synthesis node
-    prereqs: ['mod-7', 'mod-8', 'math-2'],
-    hours: 10, weightage: '4%',
-    description: 'JEE practical skills, error propagation analysis, graphs interpretation & laboratory instruments.',
-  },
+  // ── MECHANICS ROW 5 ──────────────────────────────────────────────────────────
+  { id: 'm7', title: 'Properties of Solids & Liquids', color: 'blue',   x: nx(700),  y: ZY.mech5, w: NW, h: NH, prereqs: ['m3'] },
+  { id: 't5', title: 'Thermodynamics (Laws)',           color: 'amber',  x: nx(1330), y: ZY.mech5, w: NW, h: NH, prereqs: ['t4'] },
+  { id: 'e5', title: 'Magnetic Effects of Current',     color: 'rose',   x: nx(1710), y: ZY.mech5, w: NW, h: NH, prereqs: ['e4'] },
+  { id: 'vc', title: 'Vector Calculus',                 color: 'purple', x: nx(2020), y: ZY.mech5, w: 180, h: NH, prereqs: ['f3', 'f6'] },
+
+  // ── MECHANICS ROW 6 ──────────────────────────────────────────────────────────
+  { id: 'm8', title: 'Mechanical Properties of Fluids', color: 'blue',  x: nx(700),  y: ZY.mech6, w: NW, h: NH, prereqs: ['m7'] },
+  { id: 't6', title: 'Entropy',                         color: 'amber', x: nx(1330), y: ZY.mech6, w: NW, h: NH, prereqs: ['t5'] },
+  { id: 'e6', title: 'Magnetism & Matter',               color: 'rose',  x: nx(1710), y: ZY.mech6, w: NW, h: NH, prereqs: ['e5'] },
+
+  // ── WAVES ROW 1 ──────────────────────────────────────────────────────────────
+  { id: 'm9', title: 'Oscillations',              color: 'blue', x: nx(700),  y: ZY.wave1, w: NW, h: NH, prereqs: ['m4', 'm8'] },
+  { id: 'e7', title: 'Electromagnetic Induction', color: 'rose', x: nx(1710), y: ZY.wave1, w: NW, h: NH, prereqs: ['e6'] },
+
+  // ── WAVES ROW 2 ──────────────────────────────────────────────────────────────
+  { id: 'w1', title: 'Waves',               color: 'green', x: nx(700),  y: ZY.wave2, w: NW, h: NH, prereqs: ['m9'] },
+  { id: 'e8', title: 'Alternating Current', color: 'rose',  x: nx(1710), y: ZY.wave2, w: NW, h: NH, prereqs: ['e7'] },
+
+  // ── OPTICS ROW 1 ─────────────────────────────────────────────────────────────
+  { id: 'w2', title: 'Sound Waves',           color: 'green', x: nx(380),  y: ZY.mod1, w: NW, h: NH, prereqs: ['w1'] },
+  { id: 'w3', title: 'Wave Optics',           color: 'green', x: nx(760),  y: ZY.mod1, w: NW, h: NH, prereqs: ['w1'] },
+  { id: 'e9', title: 'Electromagnetic Waves', color: 'rose',  x: nx(1710), y: ZY.mod1, w: NW, h: NH, prereqs: ['e8'] },
+
+  // ── OPTICS ROW 2 ─────────────────────────────────────────────────────────────
+  { id: 'w4', title: 'Ray Optics', color: 'green', x: nx(700), y: ZY.mod2, w: NW, h: NH, prereqs: ['w3'] },
+
+  // ── MODERN PHYSICS ROW 1: 6 nodes, spacing=310, start=155 ───────────────────
+  // Centers: 155, 465, 775, 1085, 1395, 1705. Span: 155..1855 ✓ centered ✓
+  { id: 'p1', title: 'Dual Nature of Radiation & Matter', color: 'pink', x: nx(185),  y: ZY.therm1, w: NW, h: NH, prereqs: ['e9'] },
+  { id: 'p2', title: 'Photoelectric Effect',               color: 'pink', x: nx(535),  y: ZY.therm1, w: NW, h: NH, prereqs: ['p1'] },
+  { id: 'p3', title: 'Atomic Structure',                   color: 'pink', x: nx(885),  y: ZY.therm1, w: NW, h: NH, prereqs: ['p2'] },
+  { id: 'p4', title: 'Nuclei',                             color: 'pink', x: nx(1220), y: ZY.therm1, w: NW, h: NH, prereqs: ['p3'] },
+  { id: 'p5', title: 'Semiconductor Electronics',          color: 'pink', x: nx(1555), y: ZY.therm1, w: NW, h: NH, prereqs: ['e4'] },
+  { id: 'p6', title: 'Communication Systems',              color: 'pink', x: nx(1840), y: ZY.therm1, w: NW, h: NH, prereqs: ['p5', 'e9'] },
+
+  // ── MODERN PHYSICS ROW 2 ─────────────────────────────────────────────────────
+  { id: 'q1', title: 'Quantum Mechanics', color: 'pink', x: nx(535), y: ZY.therm2, w: NW, h: NH, prereqs: ['p2', 'p3'] },
+  { id: 'q2', title: 'Radioactivity',     color: 'pink', x: nx(885), y: ZY.therm2, w: NW, h: NH, prereqs: ['p4'] },
 ];
 
-const CATEGORIES_LEGEND = [
-  { label: 'Mathematics & Tools', colorBg: 'bg-[#e9d5ff]', borderBg: 'border-[#c084fc]', textBg: 'text-[#6b21a8]' },
-  { label: 'Mechanics', colorBg: 'bg-[#dbeafe]', borderBg: 'border-[#60a5fa]', textBg: 'text-[#1e40af]' },
-  { label: 'Waves & Oscillations', colorBg: 'bg-[#dcfce7]', borderBg: 'border-[#4ade80]', textBg: 'text-[#166534]' },
-  { label: 'Thermal & Statistical', colorBg: 'bg-[#ffedd5]', borderBg: 'border-[#fb923c]', textBg: 'text-[#9a3412]' },
-  { label: 'Electromagnetism', colorBg: 'bg-[#ffe4e6]', borderBg: 'border-[#fb7185]', textBg: 'text-[#9f1239]' },
-  { label: 'Modern Physics', colorBg: 'bg-[#ccfbf1]', borderBg: 'border-[#2dd4bf]', textBg: 'text-[#115e59]' },
+// ─── CATEGORIES LEGEND ───────────────────────────────────────────────────────
+const LEGEND = [
+  { label: 'Mathematics & Tools', color: 'purple' },
+  { label: 'Mechanics',           color: 'blue' },
+  { label: 'Waves & Oscillations',color: 'green' },
+  { label: 'Thermal & Statistical',color: 'amber' },
+  { label: 'Electromagnetism',    color: 'rose' },
+  { label: 'Modern Physics',      color: 'pink' },
+];
+
+// ─── COLOR PALETTES ───────────────────────────────────────────────────────────
+const COLOR = {
+  purple: { bg: '#f3e8ff', border: '#c084fc', text: '#581c87' },
+  blue:   { bg: '#e0f2fe', border: '#38bdf8', text: '#0369a1' },
+  amber:  { bg: '#ffedd5', border: '#fb923c', text: '#9a3412' },
+  rose:   { bg: '#ffe4e6', border: '#fb7185', text: '#9f1239' },
+  green:  { bg: '#dcfce7', border: '#4ade80', text: '#166534' },
+  pink:   { bg: '#fce7f3', border: '#f472b6', text: '#831843' },
+};
+
+// ─── ZONE BAND DEFINITIONS ───────────────────────────────────────────────────
+const BANDS = [
+  { label: 'FOUNDATION\n(Must Build First)', y1: ZY.found - 16,   y2: ZY.mech1 - 20,       fill: '#f3e8ff', stroke: '#d8b4fe' },
+  { label: 'CORE MECHANICS',                 y1: ZY.mech1 - 16,   y2: ZY.wave1 - 20,        fill: '#e0f2fe', stroke: '#7dd3fc' },
+  { label: 'WAVES, OPTICS &\nOSCILLATIONS', y1: ZY.wave1 - 16,   y2: ZY.therm1 - 20,       fill: '#dcfce7', stroke: '#86efac' },
+  { label: 'MODERN PHYSICS',                 y1: ZY.therm1 - 16,  y2: ZY.therm2 + NH + 20,  fill: '#fce7f3', stroke: '#f9a8d4' },
 ];
 
 export default function GraphPage() {
-  const [selectedNodeId, setSelectedNodeId] = useState('math-4');
-  const [hoveredNodeId, setHoveredNodeId] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [hoveredId, setHoveredId] = useState(null);
 
-  // Chapter map for quick lookup
-  const chapterMap = useMemo(() => {
-    const map = new Map();
-    GRAPH_DATA.forEach((item) => map.set(item.id, item));
-    return map;
+  const activeId = hoveredId || selectedId;
+
+  const nodeMap = useMemo(() => {
+    const m = new Map();
+    GRAPH_DATA.forEach(n => m.set(n.id, n));
+    return m;
   }, []);
 
-  // Compute downstream chapters
-  const downstreamMap = useMemo(() => {
-    const map = new Map();
-    GRAPH_DATA.forEach((item) => map.set(item.id, []));
-    GRAPH_DATA.forEach((item) => {
-      item.prereqs.forEach((prereqId) => {
-        if (map.has(prereqId)) {
-          map.get(prereqId).push(item.id);
-        }
-      });
-    });
-    return map;
-  }, []);
+  const directPrereqs = useMemo(() => (activeId ? (nodeMap.get(activeId)?.prereqs ?? []) : []), [activeId, nodeMap]);
+  const directDownstream = useMemo(() => (activeId ? GRAPH_DATA.filter(n => n.prereqs.includes(activeId)).map(n => n.id) : []), [activeId]);
 
-  // Compute all directed edges (Source -> Target)
-  const allEdges = useMemo(() => {
-    const edges = [];
-    GRAPH_DATA.forEach((targetNode) => {
-      targetNode.prereqs.forEach((prereqId) => {
-        const sourceNode = chapterMap.get(prereqId);
-        if (sourceNode) {
-          edges.push({
-            id: `${sourceNode.id}->${targetNode.id}`,
-            source: sourceNode,
-            target: targetNode,
-          });
-        }
-      });
-    });
-    return edges;
-  }, [chapterMap]);
+  /* Helper: shortest cardinal-axis path, connects BOTTOM of source to TOP of target (when target is below) */
+  const edgePath = (src, tgt) => {
+    const sx = src.x + src.w / 2;
+    const sy = src.y + src.h;          // bottom center of source
+    const ty = tgt.y;                  // top of target
+    const tx = tgt.x + tgt.w / 2;
 
-  const activeNodeId = hoveredNodeId || selectedNodeId;
-  const selectedNode = chapterMap.get(selectedNodeId) || GRAPH_DATA[0];
-
-  const directPrereqIds = selectedNode ? selectedNode.prereqs : [];
-  const downstreamIds = selectedNode ? downstreamMap.get(selectedNode.id) || [] : [];
-
-  // Enhanced larger box dimensions
-  const defaultNodeW = 180;
-  const defaultNodeH = 75;
-
-  const getNodeBounds = (node) => {
-    const w = node.w || defaultNodeW;
-    const h = node.h || defaultNodeH;
-    return { x: node.x, y: node.y, w, h };
+    // same horizontal center? pure vertical line
+    if (Math.abs(sx - tx) < 4) {
+      return `M ${sx} ${sy} L ${tx} ${ty}`;
+    }
+    // Otherwise: step down halfway, then across, then down to target top
+    const my = (sy + ty) / 2;
+    return `M ${sx} ${sy} L ${sx} ${my} L ${tx} ${my} L ${tx} ${ty}`;
   };
 
-  const getStyleForNode = (node) => {
-    const isSelected = selectedNodeId === node.id;
-    const isPrereq = directPrereqIds.includes(node.id);
-    const isDownstream = downstreamIds.includes(node.id);
-
-    if (isSelected) {
-      return 'bg-white border-2 border-slate-900 shadow-2xl ring-4 ring-slate-900/10 scale-105 z-30 font-extrabold';
-    }
-    if (isPrereq) {
-      return 'bg-amber-100 border-2 border-amber-500 shadow-lg ring-2 ring-amber-500/30 scale-102 z-20 font-bold';
-    }
-    if (isDownstream) {
-      return 'bg-emerald-100 border-2 border-emerald-500 shadow-lg ring-2 ring-emerald-500/30 scale-102 z-20 font-bold';
-    }
-
-    switch (node.color) {
-      case 'purple':
-        return 'bg-[#f3e8ff] border border-[#d8b4fe] text-[#581c87] hover:border-[#a855f7] hover:shadow-md';
-      case 'blue':
-        return 'bg-[#eff6ff] border border-[#bfdbfe] text-[#1e3a8a] hover:border-[#3b82f6] hover:shadow-md';
-      case 'amber':
-        return 'bg-[#fff7ed] border border-[#fed7aa] text-[#7c2d12] hover:border-[#f97316] hover:shadow-md';
-      case 'rose':
-        return 'bg-[#fff1f2] border border-[#fecdd3] text-[#881337] hover:border-[#f43f5e] hover:shadow-md';
-      case 'green':
-        return 'bg-[#f0fdf4] border border-[#bbf7d0] text-[#14532d] hover:border-[#22c55e] hover:shadow-md';
-      case 'teal':
-        return 'bg-[#f0fdfa] border border-[#99f6e4] text-[#134e4a] hover:border-[#14b8a6] hover:shadow-md';
-      default:
-        return 'bg-slate-50 border border-slate-200 text-slate-800';
-    }
-  };
+  const totalH = ZY.therm2 + NH + 30;
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-800 font-['Inter'] pb-24">
-      
-      {/* Top Navigation Bar with Centered NavLinks */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between relative shadow-xs">
-        <div className="flex items-center">
-          <Link to="/" className="group flex items-center">
-            <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
-              Prereq
-            </span>
-          </Link>
-        </div>
+    <div className="min-h-screen bg-slate-50 font-['Inter'] flex flex-col">
 
-        {/* Centered Horizontal NavLinks */}
+      {/* ── HEADER ─────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+        <Link to="/graph" className="group">
+          <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200 block">
+            Prereq
+          </span>
+        </Link>
+
         <nav className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 shadow-2xs sm:absolute sm:left-1/2 sm:-translate-x-1/2">
-          <NavLink
-            to="/graph"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-              }`
-            }
-          >
-            🗺️ Dependency Graph
-          </NavLink>
-          <NavLink
-            to="/recover"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-              }`
-            }
-          >
-            🚨 Recovery Plan
-          </NavLink>
-          <NavLink
-            to="/profile"
-            className={({ isActive }) =>
-              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-              }`
-            }
-          >
-            ⚙️ Profile & Check-in
-          </NavLink>
+          {[['🗺️ Dependency Graph','/graph'],['🚨 Recovery Plan','/recover'],['⚙️ Profile & Check-in','/profile']].map(([label, to]) => (
+            <NavLink key={to} to={to} className={({ isActive }) =>
+              `px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all ${isActive ? 'bg-white text-slate-900 shadow-xs border border-slate-200/80' : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'}`
+            }>{label}</NavLink>
+          ))}
         </nav>
 
-        <div className="flex items-center">
-          <Link
-            to="/login"
-            className="text-xs sm:text-sm font-extrabold text-slate-600 hover:text-rose-600 px-3.5 py-1.5 rounded-full border border-slate-200 hover:border-rose-300 hover:bg-rose-50/80 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            <span>Logout</span>
-            <span className="text-xs">🚪</span>
-          </Link>
-        </div>
+        <Link to="/login" className="text-xs sm:text-sm font-extrabold text-slate-600 hover:text-rose-600 px-3.5 py-1.5 rounded-full border border-slate-200 hover:border-rose-300 hover:bg-rose-50/80 shadow-2xs transition-all flex items-center gap-1.5">
+          <span>Logout</span><span>🚪</span>
+        </Link>
       </header>
 
-      {/* Main Canvas Area */}
-      <main className="max-w-[1650px] mx-auto px-2 sm:px-4 pt-6">
-        
-        {/* Main Poster Container matching the Image */}
-        <div className="bg-[#fef7d8]/65 rounded-3xl p-4 sm:p-8 shadow-2xl shadow-amber-950/10 border-2 border-amber-300/70 overflow-x-auto text-center relative">
-          
-          {/* Poster Main Banner Title */}
-          <div className="mb-6 space-y-3 min-w-[1550px]">
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase">
-              JEE PHYSICS – COMPLETE CHAPTER DEPENDENCY GRAPH (11<sup>th</sup> + 12<sup>th</sup>)
-            </h1>
+      {/* ── MAIN ───────────────────────────────────────────────────────────── */}
+      <main className="flex-1 w-full mx-auto px-2 sm:px-4 py-6 pb-12" style={{ maxWidth: '95vw' }}>
 
-            {/* Category Color Legend (Matching Top Legend in Image) */}
-            <div className="flex items-center justify-center gap-3 flex-wrap pt-1 pb-4 border-b-2 border-amber-300/70">
-              {CATEGORIES_LEGEND.map((cat) => (
-                <div
-                  key={cat.label}
-                  className={`px-4 py-2 rounded-xl border text-xs font-bold shadow-xs ${cat.colorBg} ${cat.borderBg} ${cat.textBg}`}
-                >
-                  {cat.label}
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Poster Shell */}
+        <div className="bg-white rounded-3xl shadow-xl border-2 border-slate-200 overflow-hidden">
 
-          {/* CANVAS GRAPH AREA (Spacious 1550x1500 layout) */}
-          <div className="relative min-w-[1550px] h-[1500px] mx-auto bg-[#dcfce7]/70 rounded-2xl border-2 border-emerald-300/70 p-2 overflow-hidden shadow-inner">
-            
-            {/* SVG ARROW OVERLAY */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-              <defs>
-                {/* Arrowhead Markers */}
-                <marker id="arrow-default" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
-                </marker>
-                <marker id="arrow-prereq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
-                </marker>
-                <marker id="arrow-unlock" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#10b981" />
-                </marker>
-              </defs>
-
-              {/* Render Directed Edges */}
-              {allEdges.map((edge) => {
-                const sB = getNodeBounds(edge.source);
-                const tB = getNodeBounds(edge.target);
-
-                const isIncomingPrereq = edge.target.id === activeNodeId;
-                const isOutgoingUnlock = edge.source.id === activeNodeId;
-
-                let strokeColor = '#94a3b8'; // Slate 400
-                let strokeWidth = 1.5;
-                let opacity = 0.45;
-                let markerEnd = 'url(#arrow-default)';
-
-                if (isIncomingPrereq) {
-                  strokeColor = '#f59e0b'; // Amber
-                  strokeWidth = 3.5;
-                  opacity = 1;
-                  markerEnd = 'url(#arrow-prereq)';
-                } else if (isOutgoingUnlock) {
-                  strokeColor = '#10b981'; // Emerald
-                  strokeWidth = 3.5;
-                  opacity = 1;
-                  markerEnd = 'url(#arrow-unlock)';
-                }
-
-                // Compute exact connection anchors based on node relative positioning
-                let sx, sy, tx, ty;
-                const deltaX = tB.x - sB.x;
-                const deltaY = tB.y - sB.y;
-
-                if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                  // Mostly Vertical Flow
-                  if (deltaY > 0) {
-                    sx = sB.x + sB.w / 2;
-                    sy = sB.y + sB.h;
-                    tx = tB.x + tB.w / 2;
-                    ty = tB.y;
-                  } else {
-                    sx = sB.x + sB.w / 2;
-                    sy = sB.y;
-                    tx = tB.x + tB.w / 2;
-                    ty = tB.y + tB.h;
-                  }
-                } else {
-                  // Mostly Horizontal Flow
-                  if (deltaX > 0) {
-                    sx = sB.x + sB.w;
-                    sy = sB.y + sB.h / 2;
-                    tx = tB.x;
-                    ty = tB.y + tB.h / 2;
-                  } else {
-                    sx = sB.x;
-                    sy = sB.y + sB.h / 2;
-                    tx = tB.x + tB.w;
-                    ty = tB.y + tB.h / 2;
-                  }
-                }
-
-                // Smooth Orthogonal / Curved Path
-                const dx = Math.abs(tx - sx);
-                const dy = Math.abs(ty - sy);
-                const cOffset = Math.min(dx * 0.5, dy * 0.5, 50);
-
-                const pathD = `M ${sx} ${sy} C ${sx + (deltaX > 0 ? cOffset : -cOffset)} ${sy + (deltaY > 0 ? cOffset : -cOffset)}, ${tx - (deltaX > 0 ? cOffset : -cOffset)} ${ty - (deltaY > 0 ? cOffset : -cOffset)}, ${tx} ${ty}`;
-
-                return (
-                  <path
-                    key={edge.id}
-                    d={pathD}
-                    fill="none"
-                    stroke={strokeColor}
-                    strokeWidth={strokeWidth}
-                    strokeOpacity={opacity}
-                    strokeDasharray={isIncomingPrereq || isOutgoingUnlock ? '6 4' : 'none'}
-                    className={isIncomingPrereq || isOutgoingUnlock ? 'animate-pulse' : ''}
-                    markerEnd={markerEnd}
-                  />
-                );
-              })}
-            </svg>
-
-            {/* INTERACTIVE CHAPTER NODES */}
-            <div className="relative z-10 w-full h-full">
-              {GRAPH_DATA.map((node) => {
-                const bounds = getNodeBounds(node);
-                const isSelected = selectedNodeId === node.id;
-                const isPrereq = directPrereqIds.includes(node.id);
-                const isDownstream = downstreamIds.includes(node.id);
-
-                return (
-                  <div
-                    key={node.id}
-                    style={{
-                      left: `${bounds.x}px`,
-                      top: `${bounds.y}px`,
-                      width: `${bounds.w}px`,
-                      height: `${bounds.h}px`,
-                    }}
-                    onClick={() => setSelectedNodeId(node.id)}
-                    onMouseEnter={() => setHoveredNodeId(node.id)}
-                    onMouseLeave={() => setHoveredNodeId(null)}
-                    className={`absolute p-2.5 rounded-2xl transition-all cursor-pointer shadow-sm flex flex-col items-center justify-center text-center select-none ${getStyleForNode(
-                      node
-                    )}`}
-                  >
-                    <span className="text-xs sm:text-[13px] font-bold leading-snug px-1 line-clamp-2">
-                      {node.title}
-                    </span>
-                    {(isSelected || isPrereq || isDownstream) && (
-                      <span className="text-[10px] font-extrabold mt-1 opacity-90">
-                        {isSelected ? '🎯 Active' : isPrereq ? '⬆️ Prereq' : '⬇️ Unlocks'}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Bottom Left Note Box (Matching Image "How to Read") */}
-            <div className="absolute bottom-5 left-5 z-20 w-72 bg-[#f3e8ff] p-4 rounded-2xl border-2 border-purple-300/80 shadow-xl text-left text-xs space-y-1.5">
-              <span className="font-bold text-slate-900 block text-sm">How to Read</span>
-              <p className="text-xs text-purple-950 font-semibold leading-relaxed">
-                Arrow from A to B means A is required before studying B.
-              </p>
-              <div className="flex items-center gap-2 pt-1 font-bold text-xs text-purple-900">
-                <span>A</span>
-                <span>➔</span>
-                <span>B</span>
+          {/* Title Banner */}
+          <div className="px-6 pt-6 pb-4 border-b-2 border-slate-100">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">JEE Physics</h1>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-0.5">Complete Chapter Dependency Graph (11th + 12th)</p>
+              </div>
+              <div className="italic font-serif text-slate-600 text-xs sm:text-sm bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 text-right max-w-xs">
+                "Physics is not a list of formulas,<br/>it's a web of ideas."
               </div>
             </div>
 
+            {/* Legend */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {LEGEND.map(({ label, color }) => (
+                <span key={label} style={{ background: COLOR[color].bg, border: `1.5px solid ${COLOR[color].border}`, color: COLOR[color].text }}
+                  className="px-3 py-1 rounded-lg text-[11px] font-extrabold">
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            {/* Arrow Legend */}
+            <div className="flex items-center gap-6 mt-3 text-[11px] font-bold text-slate-600">
+              <span className="flex items-center gap-1.5">
+                <svg width="28" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#334155" strokeWidth="1.5" markerEnd="url(#leg-arrow)" /><defs><marker id="leg-arrow" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 L6 3 L0 6z" fill="#334155"/></marker></defs></svg>
+                A is required before studying B
+              </span>
+            </div>
+          </div>
+
+          {/* SVG Graph (full viewBox, non-scrollable: scales to container) */}
+          <div className="w-full px-3 sm:px-6 py-4 overflow-hidden">
+            <svg
+              viewBox={`0 0 ${W} ${totalH}`}
+              className="w-full block"
+              style={{ height: 'auto', overflow: 'hidden' }}
+            >
+              <defs>
+                <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M 0 0 L 8 4 L 0 8 z" fill="#94a3b8"/>
+                </marker>
+                <marker id="arr-prereq" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M 0 0 L 8 4 L 0 8 z" fill="#f59e0b"/>
+                </marker>
+                <marker id="arr-unlock" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M 0 0 L 8 4 L 0 8 z" fill="#22c55e"/>
+                </marker>
+              </defs>
+
+              {/* Zone Background Bands – rect only, no labels */}
+              {BANDS.map((band) => (
+                <rect
+                  key={band.label}
+                  x="4" y={band.y1}
+                  width={W - 8} height={band.y2 - band.y1}
+                  rx="14"
+                  fill={band.fill} fillOpacity="0.28"
+                  stroke={band.stroke} strokeWidth="1.5" strokeDasharray="6 4"
+                />
+              ))}
 
 
+
+              {/* ── EDGES ────────────────────────────────────────────────── */}
+              {GRAPH_DATA.flatMap(tgt =>
+                tgt.prereqs.map(pid => {
+                  const src = nodeMap.get(pid);
+                  if (!src) return null;
+
+                  const isPrereq   = activeId && tgt.id === activeId; // incoming arrow TO active
+                  const isUnlock   = activeId && src.id === activeId; // outgoing arrow FROM active
+                  const isRelated  = activeId && (directPrereqs.includes(pid) || directDownstream.includes(tgt.id));
+
+                  let stroke = '#cbd5e1';
+                  let sw = 1.2;
+                  let opacity = 0.5;
+                  let marker = 'url(#arr)';
+
+                  if (isPrereq) { stroke = '#f59e0b'; sw = 2.5; opacity = 1; marker = 'url(#arr-prereq)'; }
+                  else if (isUnlock) { stroke = '#22c55e'; sw = 2.5; opacity = 1; marker = 'url(#arr-unlock)'; }
+                  else if (activeId && !isRelated) { opacity = 0.10; }
+
+                  return (
+                    <path
+                      key={`${pid}->${tgt.id}`}
+                      d={edgePath(src, tgt)}
+                      fill="none"
+                      stroke={stroke}
+                      strokeWidth={sw}
+                      strokeOpacity={opacity}
+                      markerEnd={marker}
+                      strokeLinejoin="round"
+                    />
+                  );
+                })
+              )}
+
+              {/* ── NODES ─────────────────────────────────────────────────── */}
+              {GRAPH_DATA.map(node => {
+                const pal = COLOR[node.color] ?? COLOR.purple;
+                const isActive   = node.id === activeId;
+                const isPrereq   = directPrereqs.includes(node.id);
+                const isUnlock   = directDownstream.includes(node.id);
+                const isDimmed   = activeId && !isActive && !isPrereq && !isUnlock;
+
+                const bg     = isActive ? '#fef3c7' : isPrereq ? '#fef3c7' : isUnlock ? '#dcfce7' : pal.bg;
+                const border = isActive ? '#f59e0b' : isPrereq ? '#f59e0b' : isUnlock ? '#22c55e' : pal.border;
+                const textC  = isActive ? '#78350f' : isPrereq ? '#78350f' : isUnlock ? '#14532d' : pal.text;
+                const sw     = (isActive || isPrereq || isUnlock) ? 2.5 : 1.5;
+
+                return (
+                  <g
+                    key={node.id}
+                    onClick={() => setSelectedId(prev => prev === node.id ? null : node.id)}
+                    onMouseEnter={() => setHoveredId(node.id)}
+                    onMouseLeave={() => setHoveredId(null)}
+                    style={{ cursor: 'pointer', opacity: isDimmed ? 0.22 : 1, transition: 'opacity 0.2s' }}
+                  >
+                    {/* Shadow */}
+                    {(isActive || isPrereq || isUnlock) && (
+                      <rect x={node.x + 3} y={node.y + 4} width={node.w} height={node.h} rx="8" fill={border} fillOpacity="0.25"/>
+                    )}
+                    {/* Box */}
+                    <rect
+                      x={node.x} y={node.y} width={node.w} height={node.h} rx="8"
+                      fill={bg} stroke={border} strokeWidth={sw}
+                    />
+                    {/* Title — smart word-wrap, bigger font */}
+                    {(() => {
+                      const words = node.title.split(' ');
+                      const lines = [];
+                      let line = '';
+                      const MAX_CHARS = node.w < 220 ? 13 : 21;
+                      words.forEach(w => {
+                        if ((line + ' ' + w).trim().length <= MAX_CHARS) line = (line + ' ' + w).trim();
+                        else { lines.push(line); line = w; }
+                      });
+                      lines.push(line);
+                      const lineH = 23;
+                      const startY = node.y + node.h / 2 - ((lines.length - 1) * lineH / 2) + 7;
+                      return lines.map((l, i) => (
+                        <text key={i} x={node.x + node.w / 2} y={startY + i * lineH}
+                          textAnchor="middle" fontSize="19" fontWeight="800" fill={textC}>
+                          {l}
+                        </text>
+                      ));
+                    })()}
+                  </g>
+                );
+              })}
+
+
+
+            </svg>
           </div>
 
         </div>
+
+
 
       </main>
     </div>

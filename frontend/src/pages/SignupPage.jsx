@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SignupPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -30,18 +31,13 @@ export default function SignupPage() {
       return;
     }
 
-    if (!formData.agreeTerms) {
-      setMessage({ type: 'error', text: 'You must agree to the Terms of Service.' });
-      return;
-    }
-
     setIsSubmitting(true);
 
-    // Simulate API call
+    // Direct to profile page after account creation
     setTimeout(() => {
       setIsSubmitting(false);
-      setMessage({ type: 'success', text: 'Account created successfully! Redirecting to login...' });
-    }, 1000);
+      navigate('/profile');
+    }, 600);
   };
 
   return (
@@ -49,9 +45,11 @@ export default function SignupPage() {
       <div className="max-w-md w-full bg-[#f3e8ff] rounded-3xl shadow-xl shadow-purple-900/10 border-2 border-purple-300/80 p-6 sm:p-10 text-left">
         {/* Header Brand Cursive Logo */}
         <div className="flex items-center mb-6">
-          <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide">
-            Prereq
-          </span>
+          <Link to="/graph" className="group flex items-center">
+            <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
+              Prereq
+            </span>
+          </Link>
         </div>
 
         <div className="space-y-1 mb-8">
@@ -90,7 +88,7 @@ export default function SignupPage() {
                 required
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder="John Doe"
+                placeholder="Aarav Deshmukh"
                 className="w-full pl-11 pr-4 py-3 bg-white border-2 border-purple-300 rounded-2xl text-slate-900 text-sm font-semibold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-600 transition-all shadow-xs"
               />
             </div>
@@ -152,28 +150,6 @@ export default function SignupPage() {
                 />
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center pt-1">
-            <input
-              id="agreeTerms"
-              name="agreeTerms"
-              type="checkbox"
-              required
-              checked={formData.agreeTerms}
-              onChange={handleChange}
-              className="h-4 w-4 text-purple-900 focus:ring-purple-500 border-purple-300 rounded transition-all cursor-pointer accent-purple-950"
-            />
-            <label htmlFor="agreeTerms" className="ml-2.5 block text-xs font-bold text-purple-950 cursor-pointer">
-              I agree to the{' '}
-              <a href="#" className="text-purple-950 font-extrabold hover:underline">
-                Terms of Service
-              </a>{' '}
-              and{' '}
-              <a href="#" className="text-purple-950 font-extrabold hover:underline">
-                Privacy Policy
-              </a>
-            </label>
           </div>
 
           <button

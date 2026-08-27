@@ -1,6 +1,39 @@
 import { useState, useMemo } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
+const CHAPTER_NAME_LOOKUP = {
+  'math-3': 'Vectors',
+  'math-4': 'Basic Algebra & Trigonometry',
+  'math-5': 'Functions & Graphs',
+  'math-6': 'Differentiation',
+  'math-7': 'Integration',
+  'math-9': 'Coordinate Geometry & Calculus',
+  'mech-1': 'Kinematics in 1D',
+  'mech-2': 'Kinematics in 2D (Projectile Motion)',
+  'mech-3': "Newton's Laws of Motion & Friction",
+  'mech-4': 'Work, Energy & Power',
+  'mech-5': 'System of Particles & Rotational Motion',
+  'mech-6': 'Gravitation',
+  'mech-7': 'Fluid Mechanics & Properties of Matter',
+  'mech-9': 'Simple Harmonic Motion (SHM)',
+  'em-1': 'Electric Charges & Fields',
+  'em-2': 'Gauss Law & Electric Flux',
+  'em-3': 'Electric Potential & Capacitance',
+  'em-4': 'Current Electricity',
+  'em-5': 'Moving Charges & Magnetism',
+  'em-9': 'Electromagnetic Waves',
+  'therm-4': 'Thermal Expansion & Calorimetry',
+  'therm-5': 'Thermodynamics (Laws & Heat Engines)',
+  'therm-6': 'Kinetic Theory of Gases',
+  'waves-1': 'Waves & Sound',
+  'waves-2': 'Ray Optics & Optical Instruments',
+  'waves-3': 'Wave Optics & Interference',
+  'mod-1': 'Dual Nature of Matter & Photoelectric Effect',
+  'mod-2': 'Atoms & Bohr Model',
+  'mod-3': 'Nuclei & Radioactivity',
+  'mod-5': 'Semiconductors & Electronic Devices',
+};
+
 // Comprehensive JEE Physics Chapter Dataset with Dependencies & Meta
 const PHYSICS_CHAPTERS = [
   {
@@ -294,7 +327,7 @@ export default function RecoverPage() {
       {/* Top Header Navbar with Centered NavLinks */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between relative shadow-xs">
         <div className="flex items-center gap-4">
-          <Link to="/" className="group flex items-center">
+          <Link to="/graph" className="group flex items-center">
             <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
               Prereq
             </span>
@@ -555,12 +588,13 @@ export default function RecoverPage() {
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {chapter.downstreamIds.map((downId) => {
                             const downCh = chapterMap.get(downId);
+                            const displayTitle = downCh ? downCh.title : (CHAPTER_NAME_LOOKUP[downId] || downId);
                             return (
                               <span
                                 key={downId}
                                 className="px-2.5 py-1 rounded-xl bg-white border border-purple-300 text-purple-950 font-bold text-[12px] shadow-2xs"
                               >
-                                {downCh ? downCh.title : downId}
+                                {displayTitle}
                               </span>
                             );
                           })}
@@ -578,12 +612,13 @@ export default function RecoverPage() {
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {chapter.prereqs.map((prereqId) => {
                             const prereqCh = chapterMap.get(prereqId);
+                            const displayTitle = prereqCh ? prereqCh.title : (CHAPTER_NAME_LOOKUP[prereqId] || prereqId);
                             return (
                               <span
                                 key={prereqId}
                                 className="px-2.5 py-1 rounded-xl bg-white border border-amber-300 text-amber-950 font-bold text-[12px] shadow-2xs"
                               >
-                                {prereqCh ? prereqCh.title : prereqId}
+                                {displayTitle}
                               </span>
                             );
                           })}

@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,11 +25,11 @@ export default function LoginPage() {
     setIsSubmitting(true);
     setMessage(null);
 
-    // Simulate API call
+    // Direct to graph page after login
     setTimeout(() => {
       setIsSubmitting(false);
-      setMessage({ type: 'success', text: 'Login successful! Redirecting to dashboard...' });
-    }, 1000);
+      navigate('/graph');
+    }, 600);
   };
 
   return (
@@ -36,9 +37,11 @@ export default function LoginPage() {
       <div className="max-w-md w-full bg-[#f3e8ff] rounded-3xl shadow-xl shadow-purple-900/10 border-2 border-purple-300/80 p-6 sm:p-10 text-left">
         {/* Header Brand Cursive Logo */}
         <div className="flex items-center mb-6">
-          <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide">
-            Prereq
-          </span>
+          <Link to="/graph" className="group flex items-center">
+            <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
+              Prereq
+            </span>
+          </Link>
         </div>
 
         <div className="space-y-1 mb-8">

@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   // 1. Contact Details State
-  const [fullName, setFullName] = useState('Alex Morgan');
-  const [email, setEmail] = useState('alex.morgan@example.com');
-  const [phone, setPhone] = useState('+91 98765 43210');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [sameAsPhone, setSameAsPhone] = useState(true);
-  const [whatsappNumber, setWhatsappNumber] = useState('+91 98765 43210');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
 
   // Single Active Schedule State (Requirement #7: Only one active schedule for MVP)
-  const [hasActiveSchedule, setHasActiveSchedule] = useState(true);
-  const [activeScheduleName, setActiveScheduleName] = useState('Allen Physics Nurture Batch Schedule');
+  const [hasActiveSchedule, setHasActiveSchedule] = useState(false);
+  const [activeScheduleName, setActiveScheduleName] = useState('');
   const [isReplacingSchedule, setIsReplacingSchedule] = useState(false);
 
   // 2. Coaching Schedule Mode: 'upload' (Option 1) vs 'manual' (Option 2)
@@ -53,13 +54,9 @@ export default function ProfilePage() {
   const [manualHours, setManualHours] = useState(12);
 
   // Confirmed Final Physics Schedule State
-  const [physicsDeadlines, setPhysicsDeadlines] = useState([
-    { id: 1, chapter: 'Kinematics & Motion in 2D', deadline: '2026-09-10', hours: 12 },
-    { id: 2, chapter: "Newton's Laws of Motion & Friction", deadline: '2026-09-18', hours: 14 },
-    { id: 3, chapter: 'Work, Power & Energy', deadline: '2026-09-25', hours: 10 },
-  ]);
+  const [physicsDeadlines, setPhysicsDeadlines] = useState([]);
 
-  const [isScheduleConfirmed, setIsScheduleConfirmed] = useState(true);
+  const [isScheduleConfirmed, setIsScheduleConfirmed] = useState(false);
 
   // 3. WhatsApp Check-in Time State (Requirement #12: Default check-in time set to 8:00 PM)
   const [checkInTime, setCheckInTime] = useState('20:00'); // 8:00 PM (Default)
@@ -68,6 +65,7 @@ export default function ProfilePage() {
   // Toast & General State
   const [toastMessage, setToastMessage] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [showMissingInfoModal, setShowMissingInfoModal] = useState(false);
 
   // Sync WhatsApp number with Phone if sameAsPhone is checked
   const handlePhoneChange = (val) => {
@@ -180,12 +178,28 @@ export default function ProfilePage() {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
+
+    // Check if personal information is missing
+    const isPersonalDetailsMissing =
+      !fullName.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      (!sameAsPhone && !whatsappNumber.trim());
+
+    if (isPersonalDetailsMissing) {
+      setShowMissingInfoModal(true);
+      return;
+    }
+
     if (scheduleOption === 'upload' && uploadStatus === 'extracted' && !isScheduleConfirmed) {
       showToast('⚠️ Please click "Confirm & Apply Reviewed Schedule" before saving!');
       return;
     }
     setIsSaved(true);
     showToast('🎉 Profile successfully set! Check-in schedule active.');
+    setTimeout(() => {
+      navigate('/graph');
+    }, 600);
   };
 
   const activeWhatsappNumber = sameAsPhone ? phone : whatsappNumber;
@@ -209,10 +223,44 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Mandatory Personal Information Pop-up Modal */}
+      {showMissingInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border-2 border-amber-300 space-y-5 text-center relative animate-scaleIn">
+            <div className="w-16 h-16 rounded-3xl bg-amber-100 border-2 border-amber-200 text-amber-700 mx-auto flex items-center justify-center text-3xl shadow-xs">
+              ⚠️
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                Personal Information Required
+              </h3>
+              <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
+                Please add your personal information (Full Name, Email Address, and Phone Number) to save your profile and move forward.
+              </p>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMissingInfoModal(false);
+                  window.scrollTo({ top: 120, behavior: 'smooth' });
+                }}
+                className="w-full py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Add Details to Move Forward</span>
+                <span>✏️</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Navigation Header with Centered NavLinks */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between relative shadow-xs">
         <div className="flex items-center">
-          <Link to="/" className="group flex items-center">
+          <Link to="/graph" className="group flex items-center">
             <span className="font-cursive text-4xl sm:text-5xl font-bold text-slate-900 tracking-wide hover:scale-105 transition-transform duration-200">
               Prereq
             </span>
@@ -284,7 +332,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Setup Form */}
-        <form onSubmit={handleSaveProfile} className="space-y-8">
+        <form onSubmit={handleSaveProfile} noValidate className="space-y-8">
           
           {/* SECTION 1: PERSONAL CONTACT DETAILS */}
           <div className="bg-[#fef7d8] rounded-3xl p-6 sm:p-8 shadow-xl shadow-amber-900/10 border-2 border-amber-300/80 text-left space-y-6">
@@ -309,7 +357,7 @@ export default function ProfilePage() {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Alex Morgan"
+                  placeholder="e.g. Aarav Deshmukh"
                   className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
@@ -324,7 +372,7 @@ export default function ProfilePage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex.morgan@example.com"
+                  placeholder="e.g. aarav.deshmukh@example.com"
                   className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
@@ -339,7 +387,7 @@ export default function ProfilePage() {
                   required
                   value={phone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
-                  placeholder="+91 98765 43210"
+                  placeholder="e.g. +91 98765 43210"
                   className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all shadow-xs"
                 />
               </div>
@@ -370,13 +418,13 @@ export default function ProfilePage() {
                     required
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
-                    placeholder="Enter WhatsApp Number"
+                    placeholder="e.g. +91 98765 43210"
                     className="w-full px-4 py-3 rounded-2xl border-2 border-amber-300 bg-white text-slate-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition-all animate-fadeIn shadow-xs"
                   />
                 )}
                 {sameAsPhone && (
                   <p className="text-[11px] text-amber-800 font-medium">
-                    WhatsApp check-ins sent to: <span className="font-bold text-amber-950">{phone}</span>
+                    WhatsApp check-ins sent to: <span className="font-bold text-amber-950">{phone || '+91 98765 43210'}</span>
                   </p>
                 )}
               </div>
